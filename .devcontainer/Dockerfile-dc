@@ -1,0 +1,23 @@
+FROM maven:3.9.9-eclipse-temurin-21
+
+WORKDIR /workspace
+
+RUN apt-get update && apt-get install -y \
+    curl \
+    unzip \
+    zip \
+    rm -rf /var/lib/apt/lists/*
+
+# Garantir que o usuário ubuntu tenha permissões no diretório de trabalho
+RUN chown -R 1000:1000 /workspace /usr/bin /usr/local/bin
+
+USER 1000
+
+COPY . .
+
+RUN curl -sS https://starship.rs/install.sh | sh -s -- -y && \
+    echo 'eval "$(starship init bash)"' >> ~/.bashrc && \
+    echo "alias run!='mvn spring-boot:run -Dspring-boot.run.jvmArguments=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005'" >> ~/.bashrc && \
+    bash -c "source ~/.bashrc" 
+
+CMD ["sleep", "infinity"]

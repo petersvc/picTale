@@ -1,0 +1,48 @@
+services:  
+  hoppscotch:
+    image: hoppscotch/hoppscotch
+    container_name: hoppscotch
+    networks:
+      - apollo
+    ports:
+      - "3015:3000"
+      - "3115:3100"
+      - "3170:3170"
+    env_file:
+      - ./containers_data/hoppscotch/hoppscotch.env
+    restart: unless-stopped
+    depends_on:
+      - hoppscotch-db
+  
+  # Banco de dados do Hoppscotch
+  hoppscotch-db:
+    image: postgres
+    container_name: hoppscotch-db
+    networks:
+      - apollo
+    ports:
+      - "54322:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: testpass
+      POSTGRES_DB: hoppscotch
+    volumes:
+      - ./containers_data/hoppscotch/hoppscotch-dump.sql:/docker-entrypoint-initdb.d/hoppscotch-dump.sql
+
+  cloudbeaver:
+    image: dbeaver/cloudbeaver:latest
+    container_name: cloudbeaver
+    environment:
+      CB_SERVER_PORT: 8081
+    ports:
+      - "8081:8978"
+    volumes:
+      - ./containers_data/cbeaver:/opt/cloudbeaver/workspace
+    networks:
+      - apollo
+    restart: unless-stopped
+
+networks:
+  apollo:
+    external: true
+    driver: bridge

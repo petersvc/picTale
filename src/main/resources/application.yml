@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: argus
+
+  datasource:
+    url: jdbc:postgresql://db:5432/app-db
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+server:
+  port: 8080

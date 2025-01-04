@@ -1,0 +1,20 @@
+{
+    "name": "app",
+    "dockerComposeFile": "docker-compose-dc.yml",
+    "service": "app",
+    "workspaceFolder": "/workspace",
+    "shutdownAction": "stopCompose",
+    "mounts": [
+        "source=${env:HOME}/.gitconfig,target=${env:HOME}/.gitconfig,type=bind",
+        "source=${env:HOME}/.ssh,target=${env:HOME}/.ssh,type=bind"
+    ],
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "vscjava.vscode-java-pack",
+                "vmware.vscode-boot-dev-pack"
+            ]
+        }
+    }
+    //"postCreateCommand": "git reset --hard HEAD"
+}
