@@ -5,16 +5,17 @@
     "workspaceFolder": "/workspace",
     "shutdownAction": "stopCompose",
     "mounts": [
-        "source=${env:HOME}/.gitconfig,target=${env:HOME}/.gitconfig,type=bind",
-        "source=${env:HOME}/.ssh,target=${env:HOME}/.ssh,type=bind"
+        "source=${env:HOME}/.gitconfig-personal,target=/home/ubuntu/.gitconfig,type=bind",
+        "source=${env:HOME}/.ssh,target=/home/ubuntu/.ssh,type=bind"
     ],
     "customizations": {
         "vscode": {
             "extensions": [
                 "vscjava.vscode-java-pack",
-                "vmware.vscode-boot-dev-pack"
+                "vmware.vscode-boot-dev-pack",
+                "SonarSource.sonarlint-vscode",
+                "Codeium.codeium"
             ]
         }
     }
-    //"postCreateCommand": "git reset --hard HEAD"
 }

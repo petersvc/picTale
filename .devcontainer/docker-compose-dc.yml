@@ -9,7 +9,7 @@ services:
     ports:
       - "6432:5432"
     # volumes:
-    #   - ./apollo-dump.sql:/docker-entrypoint-initdb.d/apollo-dump.sql
+    #   - ./dump.sql:/docker-entrypoint-initdb.d/dump.sql
     networks:
       - apollo
   
@@ -23,7 +23,7 @@ services:
     ports:
       - "6433:5432"
     # volumes:
-    #   - ./apollo-dump.sql:/docker-entrypoint-initdb.d/apollo-dump.sql
+    #   - ./dump.sql:/docker-entrypoint-initdb.d/dump.sql
     networks:
       - apollo
 
@@ -31,10 +31,10 @@ services:
     build:
       context: ..
       dockerfile: .devcontainer/Dockerfile-dc
-    container_name: apollo-api-dc
+    container_name: app
     ports:
-      - "8080:8080"
-      - "8085:5005" # Porta de depuração remota
+      - "9080:8080"
+      - "6005:5005" # Porta de depuração remota
     depends_on:
       - db
       - db-test

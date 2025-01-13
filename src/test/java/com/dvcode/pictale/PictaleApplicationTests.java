@@ -1,13 +1,14 @@
-package com.pictale.argus;
+package com.dvcode.pictale;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class ArgusApplicationTests {
+class PictaleApplicationTests {
 
 	@Test
 	void contextLoads() {
+		// nada
 	}
 
 }
