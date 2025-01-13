@@ -1,10 +1,6 @@
----
-
 # Pictale - Rede Social para Fotógrafos
 
 **Pictale** é uma plataforma inovadora para fotógrafos compartilharem seu trabalho, conectarem-se e se destacarem na comunidade. Desenvolvida para ser uma rede social intuitiva, Pictale permite que fotógrafos mostrem seu portfólio, interajam com outros profissionais e se conectem com oportunidades.
-
----
 
 ## Funcionalidades
 
