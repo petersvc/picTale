@@ -16,8 +16,7 @@ USER 1000
 RUN curl -sS https://starship.rs/install.sh | sh -s -- -y && \
     echo 'eval "$(starship init bash)"' >> ~/.bashrc && \
     bash -c "sh ./.devcontainer/scripts_instalacao/node_setup.sh" && \
-    echo "alias run!='mvn spring-boot:run -Dspring-boot.run.jvmArguments=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005'" >> ~/.bashrc && \
+    echo "alias run!='PG_PASS=postgres mvn spring-boot:run -Dspring-boot.run.jvmArguments=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005'" >> ~/.bashrc && \
     bash -c "source ~/.bashrc"
-    #mvn clean
 
 CMD ["sleep", "infinity"]

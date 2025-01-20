@@ -1,7 +1,7 @@
 package com.dvcode.pictale.service;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,8 +31,16 @@ public class PhotographerService {
         return photographerRepository.save(photographer);
     }
 
-    public Page<Photographer> findAll(Pageable pageable) {
-        return photographerRepository.findAllByOrderByNameAsc(pageable);
+    public Photographer findByEmailAndPassword(String email, String password) {
+        return photographerRepository.findByEmailAndPassword(email, password)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid email or password"));
+    }
+    public List<Photographer> findAll() {
+        return photographerRepository.findAllByOrderByNameAsc();
+    }
+
+    public boolean isAdmin(Photographer photographer) {
+        return photographer.getRole() == Role.ADMIN;
     }
 
     public void suspend(Integer id) {

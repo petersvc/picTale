@@ -3,16 +3,19 @@
 <head th:fragment="head">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="${title}">Pictale</title>
+    <title>Pictale</title>
     <link rel="stylesheet" th:href="@{/css/style.css}" />
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 </head>
-<body>
+<body class="d-flex flex-column min-vh-100 px-5 py-3">
     <header th:replace="~{fragments/header :: header}"></header>
-    <main class="container mt-4">
+    <main class="container-fluid flex-grow-1">
         <div th:replace="~{${content}}"></div>
+        <div th:replace="~{fragments/toast :: toast}"></div>    
     </main>
     <footer th:replace="~{fragments/footer :: footer}"></footer>
     <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <script th:src="@{/js/main.js}"></script>
 </body>
 </html>

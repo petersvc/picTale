@@ -7,7 +7,6 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -46,7 +45,7 @@ public class Photo {
     @OneToMany(mappedBy = "photo", cascade = CascadeType.ALL)
     private Set<Comment> comments;
 
-    @ElementCollection
-    private Set<String> hashtags;
+    @OneToMany(mappedBy = "photo", cascade = CascadeType.ALL)
+    private Set<PhotoTag> photoTags;  // Relacionamento com as hashtags
 }
 

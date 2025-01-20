@@ -6,16 +6,17 @@ import org.springframework.stereotype.Repository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface PhotographerRepository extends JpaRepository<Photographer, Integer> {
     Optional<Photographer> findByEmail(String email);
-    
-    // boolean existsByEmail(String email);
+
+    Optional<Photographer> findByEmailAndPassword(String email, String password);
     
     // Para busca paginada de fotógrafos (caso de uso do admin)
-    Page<Photographer> findAllByOrderByNameAsc(Pageable pageable);
+    List<Photographer> findAllByOrderByNameAsc();
     
     // Buscar fotógrafos não suspensos
     Page<Photographer> findBySuspendedFalseOrderByNameAsc(Pageable pageable);

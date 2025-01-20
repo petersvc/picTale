@@ -4,14 +4,15 @@ spring:
   datasource:
     url: jdbc:postgresql://db:5432/app-db
     username: postgres
-    password: ${POSTGRES_PASSWORD}
+    password: ${PG_PASS}
     driver-class-name: org.postgresql.Driver
-
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
     database-platform: org.hibernate.dialect.PostgreSQLDialect
-
+  web:
+    resources:
+      static-locations: classpath:/static/, classpath:/public/, classpath:/resources/, classpath:/META-INF/resources/, file:/home/peter-costa/workspace/personal/pictale/uploads/
 server:
   port: 8080
