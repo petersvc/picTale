@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -72,8 +73,7 @@ public class PhotoService {
         String projectRoot = System.getProperty("user.dir");
     
         // Diretório onde as imagens serão armazenadas, relativo à raiz do projeto
-        String uploadDir = projectRoot + "/uploads/photos";
-        System.out.println("Saving file to: " + uploadDir); // Log para o caminho do diretório
+        String uploadDir = projectRoot + "/src/main/resources/static/uploads/photos";
     
         // Cria o diretório se ele não existir
         File directory = new File(uploadDir);
@@ -82,12 +82,10 @@ public class PhotoService {
             if (!dirCreated) {
                 throw new IOException("Failed to create directory: " + uploadDir);
             }
-            System.out.println("Directory created: " + uploadDir); // Log de criação de diretório
         }
     
         // Define o nome do arquivo
         String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
-        System.out.println("Saving file as: " + fileName); // Log para o nome do arquivo
     
         // Salva o arquivo no diretório
         File destinationFile = new File(directory, fileName);
@@ -118,5 +116,18 @@ public class PhotoService {
         }
         return tagSet;
     }
+
+    public List<Photo> getPhotos(Photographer photographer) {
+        return photoRepository.findByPhotographer(photographer);
+    }
+
+    public List<Photo> getAllPhotos() {
+        return photoRepository.findAll();
+    }
+
+    public Photo getPhotoById(Integer id) {
+        return photoRepository.findById(id).orElse(null);  // Retorna a foto ou null se não encontrada
+    }
+    
     
 }

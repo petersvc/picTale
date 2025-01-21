@@ -5,11 +5,12 @@ import java.io.Serializable;
 import jakarta.persistence.Embeddable;
 import lombok.Data;
 
-// Classe identificadora composta para Like
 @Data
 @Embeddable
 public class LikeId implements Serializable {
     private Integer photoId;
     private Integer photographerId;
-    private Long serialVersionUID;
+
+    // Adicionar um valor fixo ou gerar automaticamente
+    private Long serialVersionUID = 1L; // Defina o valor fixo ou gere conforme necessário
 }

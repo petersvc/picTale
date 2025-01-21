@@ -1,6 +1,10 @@
 spring:
   application:
     name: Pictale
+  servlet:
+    multipart:
+      max-file-size: 15MB
+      max-request-size: 15MB
   datasource:
     url: jdbc:postgresql://db:5432/app-db
     username: postgres

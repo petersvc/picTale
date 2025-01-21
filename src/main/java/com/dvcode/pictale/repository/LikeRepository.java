@@ -17,4 +17,6 @@ public interface LikeRepository extends JpaRepository<Like, LikeId> {
     
     // Buscar todas as curtidas de um fotógrafo
     List<Like> findByPhotographerId(Integer photographerId);
+
+    void deleteById(LikeId id);
 }

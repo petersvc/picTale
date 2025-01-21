@@ -1,0 +1,22 @@
+<div th:fragment="content">
+    <div class="container mt-5">
+        <div class="row d-flex justify-content-center">
+            <div class="col-md-8 text-center">
+                <!-- Exibe a imagem da foto -->
+                <img th:src="@{${photo.imageUrl}}" class="img-fluid" th:alt="${photo.caption}">
+                <h3 th:text="${photo.caption}"></h3>
+                <p>Fotógrafo: <span th:text="${photo.photographer.name}"></span></p>
+
+                <!-- Botão de curtir ou deixar de curtir -->
+                <form th:action="@{/photos/{id}/like(id=${photo.id})}" method="post">
+                    <button type="submit" class="btn btn-sm" th:text="${liked ? 'Descurtir' : 'Curtir'}">
+                        <i class="fas fa-heart"></i> 
+                    </button>
+                </form>
+
+                <!-- Aqui você pode exibir detalhes adicionais, como descrição, comentários, etc. -->
+                <!-- <p th:text="${photo.description}"></p> -->
+            </div>
+        </div>
+    </div>
+</div>

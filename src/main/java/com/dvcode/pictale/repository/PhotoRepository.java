@@ -1,6 +1,8 @@
 package com.dvcode.pictale.repository;
 
 import com.dvcode.pictale.model.Photo;
+import com.dvcode.pictale.model.Photographer;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -21,4 +23,6 @@ public interface PhotoRepository extends JpaRepository<Photo, Integer> {
     // Buscar fotos por hashtag
     @Query("SELECT DISTINCT p FROM Photo p LEFT JOIN p.photoTags pt WHERE pt.tag = :hashtag")
     List<Photo> findByPhotoTags(String hashtag);
+
+    List<Photo> findByPhotographer(Photographer photographer);
 }
