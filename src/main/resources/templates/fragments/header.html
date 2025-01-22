@@ -37,4 +37,13 @@
             >
         </a>
     </div>
+    <div class="admin-link">
+        <!-- Exibir apenas para ADMIN -->
+        <!-- <th:block th:if="${currentUser?.role == 'ADMIN'}"> -->
+            <a href="/admin/photographers" title="Photographers">
+                <i class="fas fa-user-shield"></i>
+                <!-- <span th:text="${currentUser?.role}"></span> -->
+            </a>
+        <!-- </th:block> -->
+    </div>
 </header>

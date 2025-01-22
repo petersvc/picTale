@@ -4,8 +4,11 @@ import com.dvcode.pictale.model.Photographer;
 import com.dvcode.pictale.model.Photo;
 import com.dvcode.pictale.service.LikeService;
 import com.dvcode.pictale.service.PhotoService;
+import com.dvcode.pictale.service.PhotographerService;
 import com.dvcode.pictale.util.Role;
 
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -23,26 +26,28 @@ public class PhotoController {
 
     private final PhotoService photoService;
     private final LikeService likeService;
+    private final PhotographerService photographerService;
 
-    public PhotoController(PhotoService photoService, LikeService likeService) {
+    public PhotoController(PhotoService photoService, LikeService likeService, PhotographerService photographerService) {
         this.photoService = photoService;
         this.likeService = likeService;
+        this.photographerService = photographerService;
     }
 
-    @GetMapping("/photos/{id}")
+     @GetMapping("/photos/{id}")
     @Transactional(readOnly = true)
-    public String getPhoto(Model model, @PathVariable("id") Integer id, @SessionAttribute(name = "photographer", required = false) Photographer photographer) {
-        if (photographer == null) {
+    public String getPhoto(Model model, @PathVariable("id") Integer id, @AuthenticationPrincipal UserDetails userDetails) {
+        if (userDetails == null) {
             return "redirect:/login";
         }
 
+        Photographer photographer = photographerService.findByEmail(userDetails.getUsername());
         Photo photo = photoService.getPhotoById(id);
 
         if (photo == null) {
             return "redirect:/photos";
         }
 
-        // Verifica se o fotógrafo já curtiu a foto
         boolean liked = likeService.isPhotoLikedByPhotographer(id, photographer.getId());
 
         model.addAttribute("photo", photo);
@@ -53,35 +58,55 @@ public class PhotoController {
     }
 
 
+    // @PostMapping("/photos/{id}/like")
+    // public String likePhoto(@PathVariable("id") Integer id, @SessionAttribute(name = "photographer", required = false) Photographer photographer) {
+    //     if (photographer == null) {
+    //         return "redirect:/login";
+    //     }
+
+    //     // Verifica se o fotógrafo já curtiu a foto
+    //     boolean liked = likeService.isPhotoLikedByPhotographer(id, photographer.getId());
+
+    //     if (liked) {
+    //         // Se já curtiu, remove o like
+    //         likeService.removeLike(id, photographer.getId());
+    //     } else {
+    //         // Se não curtiu, adiciona o like
+    //         likeService.addLike(id, photographer.getId());
+    //     }
+
+    //     // Redireciona de volta para a página da foto
+    //     return "redirect:/photos/" + id;
+    // }
+
     @PostMapping("/photos/{id}/like")
-    public String likePhoto(@PathVariable("id") Integer id, @SessionAttribute(name = "photographer", required = false) Photographer photographer) {
-        if (photographer == null) {
+    public String likePhoto(@PathVariable("id") Integer id, @AuthenticationPrincipal UserDetails userDetails) {
+        if (userDetails == null) {
             return "redirect:/login";
         }
 
-        // Verifica se o fotógrafo já curtiu a foto
+        Photographer photographer = photographerService.findByEmail(userDetails.getUsername());
         boolean liked = likeService.isPhotoLikedByPhotographer(id, photographer.getId());
 
         if (liked) {
-            // Se já curtiu, remove o like
             likeService.removeLike(id, photographer.getId());
         } else {
-            // Se não curtiu, adiciona o like
             likeService.addLike(id, photographer.getId());
         }
 
-        // Redireciona de volta para a página da foto
         return "redirect:/photos/" + id;
     }
 
     @PostMapping("/photos/{id}/comment")
     public String addComment(@PathVariable("id") Integer id, 
                             @RequestParam("commentText") String commentText,
-                            @SessionAttribute(name = "photographer", required = false) Photographer photographer,
+                            @AuthenticationPrincipal UserDetails userDetails,
                             RedirectAttributes attr) {
-        if (photographer == null) {
+        if (userDetails == null) {
             return "redirect:/login";
         }
+
+        Photographer photographer = photographerService.findByEmail(userDetails.getUsername());
 
         try {
             photoService.addComment(id, commentText, photographer);
@@ -95,10 +120,13 @@ public class PhotoController {
 
 
     @GetMapping("/upload-photo")
-    public String showUploadForm(Model model, @SessionAttribute(name = "photographer", required = false) Photographer photographer) {
-        if (photographer == null || photographer.getRole() != Role.PHOTOGRAPHER) {
+    public String showUploadForm(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        if (userDetails == null) {
             return "redirect:/login";
         }
+
+        Photographer photographer = photographerService.findByEmail(userDetails.getUsername());
+
         model.addAttribute("photographer", photographer);
         model.addAttribute("content", "upload-photo");  // Página para o formulário de upload
         return "layout";  // O layout da página
@@ -108,15 +136,17 @@ public class PhotoController {
     public String uploadPhoto(@RequestParam("file") MultipartFile file,
                               @RequestParam("caption") String caption,
                               @RequestParam("hashtags") String hashtags,
-                              @SessionAttribute(name = "photographer", required = false) Photographer photographer,
+                              @AuthenticationPrincipal UserDetails userDetails,
                               RedirectAttributes attr) {
-        if (photographer == null || photographer.getRole() != Role.PHOTOGRAPHER) {
+        if (userDetails == null) {
             return "redirect:/login";
         }
 
+        Photographer photographer = photographerService.findByEmail(userDetails.getUsername());
+
         try {
             // Chama o serviço para realizar o upload da foto e associar as hashtags
-            Photo photo = photoService.uploadPhoto(file, caption, hashtags, photographer);
+            photoService.uploadPhoto(file, caption, hashtags, photographer);
             
             // Redireciona com uma mensagem de sucesso
             attr.addFlashAttribute("message", "Photo uploaded successfully!");

@@ -4,6 +4,7 @@ import com.dvcode.pictale.model.Photo;
 import com.dvcode.pictale.model.Photographer;
 import com.dvcode.pictale.service.PhotoService;
 import com.dvcode.pictale.service.PhotographerService;
+import com.dvcode.pictale.util.Role;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -11,6 +12,9 @@ import jakarta.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -34,26 +38,30 @@ public class UserController {
 
     private final PhotographerService photographerService;
     private final PhotoService photoService;
+    private final BCryptPasswordEncoder passwordEncoder;
 
-    public UserController(PhotographerService photographerService, PhotoService photoService) {
+
+    public UserController(PhotographerService photographerService, PhotoService photoService, BCryptPasswordEncoder passwordEncoder) {
         this.photographerService = photographerService;
         this.photoService = photoService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping("/home")
-    public String home(Model model, @SessionAttribute(name = PHOTOGRAPHER_ARG, required = false) Photographer currentUser, HttpSession session) {
-        if (currentUser != null) {
+    public String home(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        if (userDetails != null) {
+            Photographer currentUser = photographerService.findByEmail(userDetails.getUsername());
+            
             List<Photo> photos = photoService.getTimelinePhotos(currentUser);
-
-            session.getAttribute(PHOTOGRAPHER_ARG);
-
+            
             model.addAttribute("photos", photos);
             model.addAttribute("currentUser", currentUser);
             model.addAttribute(CONTENT_ARG, "home");
             model.addAttribute("followingCount", photographerService.getFollowingCount(currentUser.getId()));
-
+            
             return LAYOUT_ARG;
         }
+        
         return "landing";
     }
     
@@ -104,29 +112,57 @@ public class UserController {
     // }
 
 
+    // @GetMapping("/login")
+    // public String showLogin(Model model) {
+    //     model.addAttribute(CONTENT_ARG, "login");
+    //     return LAYOUT_ARG;
+    // }
+
     @GetMapping("/login")
-    public String showLogin(Model model) {
+    public String showLogin(Model model, @RequestParam(required = false) String error) {
+        if (error != null) {
+            model.addAttribute("error", "Invalid email or password");
+        }
         model.addAttribute(CONTENT_ARG, "login");
         return LAYOUT_ARG;
     }
 
-    @PostMapping("/login")
-    public String login(String email, String password, RedirectAttributes attr, HttpSession session) {
-        Photographer photographer = photographerService.findByEmailAndPassword(email, password);
+    // @PostMapping("/login")
+    // public String login(String email, String password, RedirectAttributes attr, HttpSession session) {
+    //     Photographer photographer = photographerService.findByEmailAndPassword(email, password);
 
-        if (photographer.isSuspended()) {
-            attr.addFlashAttribute(ERROR_ARG, "Your account is suspended.");
-            return "redirect:/login";
-        }
+    //     if (photographer.isSuspended()) {
+    //         attr.addFlashAttribute(ERROR_ARG, "Your account is suspended.");
+    //         return "redirect:/login";
+    //     }
 
-        boolean isAdmin = photographerService.isAdmin(photographer);
-        session.setAttribute(PHOTOGRAPHER_ARG, photographer); // Armazena na sessão
+    //     boolean isAdmin = photographerService.isAdmin(photographer);
+    //     session.setAttribute(PHOTOGRAPHER_ARG, photographer); // Armazena na sessão
 
-        if (isAdmin) {
-            attr.addFlashAttribute(MESSAGE_ARG, "Login successful!");
-            return REDIRECT_PHOTOGRAPHERS;
-        } else {
-            return "redirect:/home";
-        }
-    }
+    //     if (isAdmin) {
+    //         attr.addFlashAttribute(MESSAGE_ARG, "Login successful!");
+    //         return REDIRECT_PHOTOGRAPHERS;
+    //     } else {
+    //         return "redirect:/home";
+    //     }
+    // }
+
+    // @PostMapping("/login")
+    // public String login(String email, String password, RedirectAttributes attr, HttpSession session) {
+    //     Photographer photographer = photographerService.findByEmail(email);
+
+    //     if (photographer == null || !passwordEncoder.matches(password, photographer.getPassword())) {
+    //         attr.addFlashAttribute("error", "Email ou senha inválidos.");
+    //         return "redirect:/login";
+    //     }
+
+    //     if (photographer.isSuspended()) {
+    //         attr.addFlashAttribute("error", "Sua conta está suspensa.");
+    //         return "redirect:/login";
+    //     }
+
+    //     session.setAttribute("photographer", photographer);
+    //     return photographer.getRole() == Role.ADMIN ? REDIRECT_PHOTOGRAPHERS : "redirect:/home";
+    // }
+
 }

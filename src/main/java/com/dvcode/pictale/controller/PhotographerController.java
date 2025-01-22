@@ -1,5 +1,7 @@
 package com.dvcode.pictale.controller;
 
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,21 +26,24 @@ public class PhotographerController {
     }
 
     @GetMapping("/photographers/{id}")
-    public String getPhotographerPage(@PathVariable Integer id, Model model, @SessionAttribute(name = "photographer", required = false) Photographer currentUser) {
-        if (currentUser == null) {
+    public String getPhotographerPage(@PathVariable Integer id, Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        if (userDetails == null) {
             return "redirect:/login";
         }
 
+        Photographer currentUser = photographerService.findByEmail(userDetails.getUsername());
         Photographer photographer = photographerService.findById(id);
-
+        
         model.addAttribute("photographer", photographer);
         model.addAttribute("content", "photographer");
-
         return "layout";
     }
 
     @PostMapping("/photographers/{id}/follow")
-    public String followPhotographer(@PathVariable Integer id, @SessionAttribute(name = "photographer", required = false) Photographer currentUser, RedirectAttributes redirectAttributes) {
+    public String followPhotographer(@PathVariable Integer id, 
+                                   @AuthenticationPrincipal UserDetails userDetails, 
+                                   RedirectAttributes redirectAttributes) {
+        Photographer currentUser = photographerService.findByEmail(userDetails.getUsername());
         Photographer photographerToFollow = photographerService.findById(id);
 
         if (currentUser.equals(photographerToFollow)) {
@@ -47,18 +52,20 @@ public class PhotographerController {
         }
 
         boolean isFollowing = followService.follow(currentUser, photographerToFollow);
-
         if (isFollowing) {
-            redirectAttributes.addFlashAttribute("message", "Você agora está seguindo " + photographerToFollow.getName() + "!");
+            redirectAttributes.addFlashAttribute("message", 
+                "Você agora está seguindo " + photographerToFollow.getName() + "!");
         } else {
-            redirectAttributes.addFlashAttribute("error", "Você já segue " + photographerToFollow.getName() + ".");
+            redirectAttributes.addFlashAttribute("error", 
+                "Você já segue " + photographerToFollow.getName() + ".");
         }
-
         return "redirect:/photographers/" + id;
     }
 
     @GetMapping("/following")
-    public String profile(Model model, @SessionAttribute(name = "photographer", required = false) Photographer currentUser) {
+    public String profile(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        Photographer currentUser = photographerService.findByEmail(userDetails.getUsername());
+        
         model.addAttribute("photographer", currentUser);
         model.addAttribute("followingCount", photographerService.getFollowingCount(currentUser.getId()));
         model.addAttribute("followedPhotographers", photographerService.getFollowing(currentUser.getId()));

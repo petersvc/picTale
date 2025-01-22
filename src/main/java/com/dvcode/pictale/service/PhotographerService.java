@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.hibernate.Hibernate;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,10 +24,12 @@ import com.dvcode.pictale.repository.PhotographerRepository;
 public class PhotographerService {
     private final PhotographerRepository photographerRepository;
     private final FollowRepository followRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
-    public PhotographerService(PhotographerRepository photographerRepository, FollowRepository followRepository) {
+    public PhotographerService(PhotographerRepository photographerRepository, FollowRepository followRepository, BCryptPasswordEncoder passwordEncoder) {
         this.photographerRepository = photographerRepository;
         this.followRepository = followRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public String uploadProfilePicture(MultipartFile file) throws IOException {
@@ -63,8 +66,14 @@ public class PhotographerService {
 
         photographer.setRole(Role.PHOTOGRAPHER);
         photographer.setSuspended(false);
+        photographer.setPassword(passwordEncoder.encode(photographer.getPassword()));
         
         return photographerRepository.save(photographer);
+    }
+
+    public Photographer findByEmail(String email) {
+        return photographerRepository.findByEmail(email)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Photographer not found"));
     }
 
     public Photographer findByEmailAndPassword(String email, String password) {
