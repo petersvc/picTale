@@ -11,5 +11,6 @@ import lombok.Data;
 public class FollowId implements Serializable {
     private Integer followeeId;
     private Integer followerId;
-    private Long serialVersionUID;
+    
+    private Long serialVersionUID = 1L; 
 }

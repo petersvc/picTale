@@ -1,0 +1,16 @@
+<div class="container mt-4" th:fragment="following">
+    <h3 class="text-center mb-4">Seguindo (<span th:text="${followedPhotographers.size()}"></span>)</h3>
+    <div class="d-flex flex-wrap justify-content-center">
+        
+        <div class="m-2" style="width: 300px;" th:each="followed : ${followedPhotographers}">
+            <div class="card">
+                <img th:src="@{${followed.followee.profilePicture}}" class="card-img-top" alt="Profile Picture">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${followed.followee.name}"></h5>
+                    <p class="card-text" th:text="${followed.followee.city} + ', ' + ${followed.followee.country}"></p>
+                    <a th:href="@{/photographers/{id}(id=${followed.followee.id})}" class="btn btn-primary">Ver Perfil</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

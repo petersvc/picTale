@@ -4,7 +4,11 @@
             <div class="col-md-8">
                 <img th:if="${photo.imageUrl != null}" th:src="@{${photo.imageUrl}}" class="img-fluid" th:alt="${photo.caption}">
                 <div class="d-flex justify-content-between align-items-center mt-3">
-                    <p><span th:text="${photo?.photographer?.name} + ': ' + ${photo.caption}"></span></p>                
+                    
+                    <p><a
+                        class="text-decoration-none text-dark"
+                        th:href="@{/photographers/{id}(id=${photo.photographer.id})}" 
+                        th:text="${photo?.photographer?.name} + ': ' + ${photo.caption}"></a></p>                
                     <form th:action="@{/photos/{id}/like(id=${photo.id})}" method="post">
                         <button type="submit" class="btn btn-lg">
                             <i th:classappend="${liked != null && liked} ? 'fas fa-heart text-danger' : 'fas fa-heart text-secondary'">

@@ -1,15 +1,19 @@
-<div class="container mt-4 px-0 mx-auto" th:fragment="content">
+<div class="container px-0 mx-auto" th:fragment="content">
     <div class="d-flex flex-column align-items-center">
+        <h1 class="text-center mb-4"></h1>
         <div class="col-8 mb-4" th:each="photo : ${photos}">
             <div class="card border-0 mx-4 w-100">
                 <!-- Link para a página da foto -->
                 <a th:href="@{/photos/{id}(id=${photo.id})}">
-                    <img th:src="@{${photo.imageUrl}}" class="card-img-top" th:alt="${photo.caption}">
+                    <img th:src="@{${photo.imageUrl}}" class="img-fluid img-thumbnail" th:alt="${photo.caption}">
                 </a>
                 <div class="card-body px-0">
                     <div class="d-flex justify-content-between align-items-center">
                         <!-- Nome do fotógrafo alinhado à esquerda -->
-                        <span th:text="${photo.photographer.name}" class=""></span>
+                        <a th:href="@{/photographers/{id}(id=${photo.photographer.id})}" 
+                        th:text="${photo.photographer.name}" 
+                        class="text-decoration-none text-dark"></a>
+                     
 
                         <!-- Likes e comentários alinhados à direita -->
                         <div class="d-flex align-items-center justify-content-between">

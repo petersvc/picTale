@@ -6,8 +6,6 @@ import com.dvcode.pictale.service.LikeService;
 import com.dvcode.pictale.service.PhotoService;
 import com.dvcode.pictale.util.Role;
 
-import java.time.format.DateTimeFormatter;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;

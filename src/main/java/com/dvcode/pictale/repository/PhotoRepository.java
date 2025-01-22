@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 @Repository
 public interface PhotoRepository extends JpaRepository<Photo, Integer> {
@@ -26,5 +27,20 @@ public interface PhotoRepository extends JpaRepository<Photo, Integer> {
 
     List<Photo> findByPhotographer(Photographer photographer);
     
-    List<Photo> findByPhotographerNot(Photographer photographer);
+    // List<Photo> findByPhotographerNot(Photographer photographer);
+
+    @Query("""
+        SELECT p
+        FROM Photo p
+        LEFT JOIN Follow f ON f.followee = p.photographer
+        WHERE p.photographer <> :photographer
+        ORDER BY 
+            CASE 
+                WHEN f.follower = :currentPhotographer THEN 1 ELSE 2 
+            END,
+            (SELECT COUNT(f2.id) FROM Follow f2 WHERE f2.followee = p.photographer) DESC,
+            p.createdAt DESC
+    """)
+    List<Photo> findByPhotographerNot(@Param("photographer") Photographer photographer, 
+                                      @Param("currentPhotographer") Photographer currentPhotographer);
 }

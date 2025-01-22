@@ -140,7 +140,7 @@ public class PhotoService {
 
     @Transactional
     public List<Photo> getTimelinePhotos(Photographer photographer) {
-        return photoRepository.findByPhotographerNot(photographer);
+        return photoRepository.findByPhotographerNot(photographer, photographer);
     }
 
     @Transactional(readOnly = true)
