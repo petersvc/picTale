@@ -39,7 +39,7 @@ public class UserController {
     @GetMapping("/home")
     public String home(Model model, @SessionAttribute(name = PHOTOGRAPHER_ARG, required = false) Photographer currentUser) {
         if (currentUser != null) {
-            List<Photo> photos = photoService.getAllPhotos();
+            List<Photo> photos = photoService.getTimelinePhotos(currentUser);
 
             // if (currentUser.getFollowedPhotographers().isEmpty()) {
             //     photos = photoService.getPopularPhotos(); // Exibe fotos populares se não seguir ninguém

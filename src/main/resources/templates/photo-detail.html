@@ -1,21 +1,38 @@
 <div th:fragment="content">
     <div class="container mt-5">
         <div class="row d-flex justify-content-center">
-            <div class="col-md-8 text-center">
-                <!-- Exibe a imagem da foto -->
-                <img th:src="@{${photo.imageUrl}}" class="img-fluid" th:alt="${photo.caption}">
-                <h3 th:text="${photo.caption}"></h3>
-                <p>Fotógrafo: <span th:text="${photo.photographer.name}"></span></p>
-
-                <!-- Botão de curtir ou deixar de curtir -->
-                <form th:action="@{/photos/{id}/like(id=${photo.id})}" method="post">
-                    <button type="submit" class="btn btn-sm" th:text="${liked ? 'Descurtir' : 'Curtir'}">
-                        <i class="fas fa-heart"></i> 
-                    </button>
-                </form>
-
-                <!-- Aqui você pode exibir detalhes adicionais, como descrição, comentários, etc. -->
-                <!-- <p th:text="${photo.description}"></p> -->
+            <div class="col-md-8">
+                <img th:if="${photo.imageUrl != null}" th:src="@{${photo.imageUrl}}" class="img-fluid" th:alt="${photo.caption}">
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                    <p><span th:text="${photo?.photographer?.name} + ': ' + ${photo.caption}"></span></p>                
+                    <form th:action="@{/photos/{id}/like(id=${photo.id})}" method="post">
+                        <button type="submit" class="btn btn-lg">
+                            <i th:classappend="${liked != null && liked} ? 'fas fa-heart text-danger' : 'fas fa-heart text-secondary'">
+                                <span th:text="${photo.likes.size()}" class="ms-2"></span>
+                            </i>
+                        </button>
+                    </form>
+                </div>
+                
+                
+                <div class="mt-4" th:if="${photo?.comments != null}">
+                    <h4 class="text-left">Comentários</h4> <!-- Alinha o título à esquerda -->
+                    <div class="mt-3">
+                        <form th:action="@{/photos/{id}/comment(id=${photo.id})}" method="post">
+                            <div class="mb-3">
+                                <textarea class="form-control" name="commentText" rows="3" maxlength="512" placeholder="Escreva seu comentário..." required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Comentar</button>
+                        </form>
+                    </div>
+                    <ul class="list-group w-100 mt-4">
+                        <li class="list-group-item" th:each="comment : ${photo.comments}">
+                            <strong th:text="${comment?.photographer?.name}"></strong> - 
+                            <small class="text-muted" th:text="${#temporals.format(comment.createdAt, 'dd/MM/yyyy')} + ' às ' + ${#temporals.format(comment.createdAt, 'HH:mm')}"></small>
+                            <br class="mb-1"><span th:text="${comment?.commentText}"></span>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>

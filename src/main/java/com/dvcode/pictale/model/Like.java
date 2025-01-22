@@ -6,10 +6,13 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 @Data
 @Entity
@@ -18,12 +21,16 @@ public class Like {
     @EmbeddedId
     private LikeId id;
     
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("photographerId")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Photographer photographer;
     
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("photoId")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Photo photo;
 
     @CreationTimestamp

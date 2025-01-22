@@ -25,4 +25,6 @@ public interface PhotoRepository extends JpaRepository<Photo, Integer> {
     List<Photo> findByPhotoTags(String hashtag);
 
     List<Photo> findByPhotographer(Photographer photographer);
+    
+    List<Photo> findByPhotographerNot(Photographer photographer);
 }

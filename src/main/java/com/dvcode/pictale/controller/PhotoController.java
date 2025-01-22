@@ -6,7 +6,10 @@ import com.dvcode.pictale.service.LikeService;
 import com.dvcode.pictale.service.PhotoService;
 import com.dvcode.pictale.util.Role;
 
+import java.time.format.DateTimeFormatter;
+
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,12 +32,14 @@ public class PhotoController {
     }
 
     @GetMapping("/photos/{id}")
+    @Transactional(readOnly = true)
     public String getPhoto(Model model, @PathVariable("id") Integer id, @SessionAttribute(name = "photographer", required = false) Photographer photographer) {
         if (photographer == null) {
             return "redirect:/login";
         }
 
         Photo photo = photoService.getPhotoById(id);
+
         if (photo == null) {
             return "redirect:/photos";
         }
@@ -70,6 +75,26 @@ public class PhotoController {
         // Redireciona de volta para a página da foto
         return "redirect:/photos/" + id;
     }
+
+    @PostMapping("/photos/{id}/comment")
+    public String addComment(@PathVariable("id") Integer id, 
+                            @RequestParam("commentText") String commentText,
+                            @SessionAttribute(name = "photographer", required = false) Photographer photographer,
+                            RedirectAttributes attr) {
+        if (photographer == null) {
+            return "redirect:/login";
+        }
+
+        try {
+            photoService.addComment(id, commentText, photographer);
+            attr.addFlashAttribute("message", "Comentário adicionado com sucesso!");
+        } catch (Exception e) {
+            attr.addFlashAttribute("error", "Erro ao adicionar comentário: " + e.getMessage());
+        }
+
+        return "redirect:/photos/" + id;
+    }
+
 
     @GetMapping("/upload-photo")
     public String showUploadForm(Model model, @SessionAttribute(name = "photographer", required = false) Photographer photographer) {

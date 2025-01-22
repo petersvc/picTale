@@ -1,23 +1,25 @@
-<div class="row mt-4" th:fragment="content">
-    <div class="col-lg-3 col-md-4 col-sm-6 mb-4" th:each="photo : ${photos}">
-        <div class="card border-0">
-            <!-- Link para a página da foto -->
-            <a th:href="@{/photos/{id}(id=${photo.id})}">
-                <img th:src="@{${photo.imageUrl}}" class="card-img-top" th:alt="${photo.caption}">
-            </a>
-            <div class="card-body px-0">
-                <div class="d-flex justify-content-between align-items-center">
-                    <!-- Nome do fotógrafo alinhado à esquerda -->
-                    <span th:text="${photo.photographer.name}" class=""></span>
+<div class="container mt-4 px-0 mx-auto" th:fragment="content">
+    <div class="d-flex flex-column align-items-center">
+        <div class="col-8 mb-4" th:each="photo : ${photos}">
+            <div class="card border-0 mx-4 w-100">
+                <!-- Link para a página da foto -->
+                <a th:href="@{/photos/{id}(id=${photo.id})}">
+                    <img th:src="@{${photo.imageUrl}}" class="card-img-top" th:alt="${photo.caption}">
+                </a>
+                <div class="card-body px-0">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <!-- Nome do fotógrafo alinhado à esquerda -->
+                        <span th:text="${photo.photographer.name}" class=""></span>
 
-                    <!-- Likes e comentários alinhados à direita -->
-                    <div class="d-flex align-items-center justify-content-between">
-                        <a href="#" class="btn btn-sm">
-                            <i class="fas fa-heart"></i> 2
-                        </a>
-                        <a href="#" class="btn btn-sm ms-2">
-                            <i class="fas fa-comment"></i> 3
-                        </a>
+                        <!-- Likes e comentários alinhados à direita -->
+                        <div class="d-flex align-items-center justify-content-between">
+                            <a href="#" class="btn btn-md">
+                                <i class="fas fa-heart"><span th:text="${photo.likes.size()}" class="ms-2"></span></i>
+                            </a>
+                            <a href="#" class="btn btn-md ms-2">
+                                <i class="fas fa-comment"><span th:text="${photo.comments.size()}" class="ms-2"></span></i>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>

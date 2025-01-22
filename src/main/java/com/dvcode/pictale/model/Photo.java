@@ -1,13 +1,16 @@
 package com.dvcode.pictale.model;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -24,8 +27,9 @@ public class Photo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Lob
-    private byte[] imageData;
+    // @Lob
+    // @Basic(fetch = FetchType.LAZY)
+    // private byte[] imageData;
 
     private String imageUrl;
 
@@ -39,13 +43,13 @@ public class Photo {
     @JoinColumn(name = "photographer_id", nullable = false)
     private Photographer photographer;
 
-    @OneToMany(mappedBy = "photo", cascade = CascadeType.ALL)
-    private Set<Like> likes;
+    @OneToMany(mappedBy = "photo", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<Comment> comments = new HashSet<>();
 
-    @OneToMany(mappedBy = "photo", cascade = CascadeType.ALL)
-    private Set<Comment> comments;
+    @OneToMany(mappedBy = "photo", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<Like> likes = new HashSet<>();
 
-    @OneToMany(mappedBy = "photo", cascade = CascadeType.ALL)
-    private Set<PhotoTag> photoTags;  // Relacionamento com as hashtags
+    @OneToMany(mappedBy = "photo", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<PhotoTag> photoTags = new HashSet<>();
 }
 

@@ -1,12 +1,21 @@
 package com.dvcode.pictale.service;
 
+import com.dvcode.pictale.model.Comment;
 import com.dvcode.pictale.model.Photo;
 import com.dvcode.pictale.model.Photographer;
 import com.dvcode.pictale.model.PhotoTag;
 import com.dvcode.pictale.model.Tag;
+import com.dvcode.pictale.repository.CommentRepository;
 import com.dvcode.pictale.repository.PhotoRepository;
 import com.dvcode.pictale.repository.TagRepository;
+
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+
+import org.springframework.transaction.annotation.Transactional;
+
 import com.dvcode.pictale.repository.PhotoTagRepository;
+
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,11 +31,15 @@ public class PhotoService {
     private final PhotoRepository photoRepository;
     private final TagRepository tagRepository;
     private final PhotoTagRepository photoTagRepository;
+    private final CommentRepository commentRepository;
+    @PersistenceContext
+    private EntityManager entityManager;
 
-    public PhotoService(PhotoRepository photoRepository, TagRepository tagRepository, PhotoTagRepository photoTagRepository) {
+    public PhotoService(PhotoRepository photoRepository, TagRepository tagRepository, PhotoTagRepository photoTagRepository, CommentRepository commentRepository) {
         this.photoRepository = photoRepository;
         this.tagRepository = tagRepository;
         this.photoTagRepository = photoTagRepository;
+        this.commentRepository = commentRepository;
     }
 
     public Photo uploadPhoto(MultipartFile file, String caption, String hashtags, Photographer photographer) throws IOException {
@@ -60,7 +73,7 @@ public class PhotoService {
         }
     
         // Salva os dados binários da imagem no campo `imageData`
-        photo.setImageData(file.getBytes());
+        // photo.setImageData(file.getBytes());
     }    
 
     // Salva a imagem (exemplo)
@@ -125,9 +138,26 @@ public class PhotoService {
         return photoRepository.findAll();
     }
 
-    public Photo getPhotoById(Integer id) {
-        return photoRepository.findById(id).orElse(null);  // Retorna a foto ou null se não encontrada
+    @Transactional
+    public List<Photo> getTimelinePhotos(Photographer photographer) {
+        return photoRepository.findByPhotographerNot(photographer);
     }
+
+    @Transactional(readOnly = true)
+    public Photo getPhotoById(Integer id) {    
+        return photoRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Foto não encontrada"));
+    }
+
+    @Transactional
+    public void addComment(Integer photoId, String commentText, Photographer photographer) {
+        Photo photo = photoRepository.findById(photoId)
+                .orElseThrow(() -> new IllegalArgumentException("Foto não encontrada"));
     
+        Comment comment = new Comment();
+        comment.setCommentText(commentText);
+        comment.setPhoto(photo);
+        comment.setPhotographer(photographer);
     
+        commentRepository.save(comment);
+    }   
 }
