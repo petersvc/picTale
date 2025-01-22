@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comentários</title>
+</head>
+<body>
+<div class="container mt-5">
+    <h1>Comentários para a foto</h1>
+    <div>
+        <!-- Exibe a imagem da foto -->
+        <img th:src="@{${photo.imageUrl}}" class="img-fluid" th:alt="${photo.caption}">
+        <h3 th:text="${photo.caption}"></h3>
+        <p>Fotógrafo: <span th:text="${photo.photographer.name}"></span></p>
+    </div>
+
+    <form th:action="@{/photos/{photoId}/comments(photoId=${photo.id})}" method="post">
+        <textarea name="commentText" maxlength="512" placeholder="Adicione um comentário..." required></textarea>
+        <button type="submit">Comentar</button>
+    </form>
+
+    <h2>Comentários:</h2>
+    <ul>
+        <li th:each="comment : ${comments}">
+            <p th:text="${comment.commentText}"></p>
+            <small>Por: <span th:text="${comment.photographer.name}"></span></small>
+            <small em>em: <span th:text="${comment.createdAt}"></span></small>
+        </li>
+    </ul>
+</div>
+</body>
+</html>
