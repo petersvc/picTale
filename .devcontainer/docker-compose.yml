@@ -1,0 +1,39 @@
+services:
+  db:
+    image: postgres:17.2-alpine3.21
+    container_name: pictale-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: pictale
+    ports:
+      - "8432:5432"
+    # volumes:
+    #   - ./dump.sql:/docker-entrypoint-initdb.d/dump.sql
+    networks:
+      - apollo
+    mem_limit: 256m # Limite máximo de memória
+    cpus: 2 # Limite máximo de cpu
+
+  app:
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+    image: pictale:0.5
+    container_name: pictale
+    ports:
+      - "9080:8080"
+      - "6005:5005" # Porta de depuração remota
+    depends_on:
+      - db
+    volumes:
+      - ..:/workspace
+    networks:
+      - apollo
+    mem_limit: 3.5G # Limite máximo de memória
+    cpus: 2 # Limite máximo de cpu
+  
+networks:
+  apollo:
+    external: true
+    driver: bridge

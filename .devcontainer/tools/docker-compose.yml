@@ -9,14 +9,15 @@ services:
       - "3115:3100"
       - "3170:3170"
     env_file:
-      - ./containers_data/hoppscotch/hoppscotch.env
+      - ./data/hoppscotch/hoppscotch.env
     restart: unless-stopped
     depends_on:
       - hoppscotch-db
-  
-  # Banco de dados do Hoppscotch
+    mem_limit: 256m # Limite máximo de memória
+    cpus: 1 # Limite máximo de cpu
+
   hoppscotch-db:
-    image: postgres
+    image: postgres:17.2-alpine3.21
     container_name: hoppscotch-db
     networks:
       - apollo
@@ -27,7 +28,9 @@ services:
       POSTGRES_PASSWORD: testpass
       POSTGRES_DB: hoppscotch
     volumes:
-      - ./containers_data/hoppscotch/hoppscotch-dump.sql:/docker-entrypoint-initdb.d/hoppscotch-dump.sql
+      - ./data/hoppscotch/hoppscotch-dump.sql:/docker-entrypoint-initdb.d/hoppscotch-dump.sql
+    mem_limit: 256m # Limite máximo de memória
+    cpus: 1 # Limite máximo de cpu
 
   cloudbeaver:
     image: dbeaver/cloudbeaver:latest
@@ -37,10 +40,12 @@ services:
     ports:
       - "8081:8978"
     volumes:
-      - ./containers_data/cbeaver:/opt/cloudbeaver/workspace
+      - ./data/cbeaver:/opt/cloudbeaver/workspace
     networks:
       - apollo
     restart: unless-stopped
+    mem_limit: 512m # Limite máximo de memória
+    cpus: 1 # Limite máximo de cpu
 
 networks:
   apollo:

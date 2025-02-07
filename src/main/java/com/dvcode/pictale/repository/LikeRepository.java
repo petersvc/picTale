@@ -2,7 +2,9 @@ package com.dvcode.pictale.repository;
 
 import com.dvcode.pictale.model.Like;
 import com.dvcode.pictale.model.LikeId;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -18,5 +20,5 @@ public interface LikeRepository extends JpaRepository<Like, LikeId> {
     // Buscar todas as curtidas de um fotógrafo
     List<Like> findByPhotographerId(Integer photographerId);
 
-    void deleteById(LikeId id);
+    void deleteById(@NonNull LikeId id);
 }

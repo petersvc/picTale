@@ -4,9 +4,7 @@ import com.dvcode.pictale.model.Photo;
 import com.dvcode.pictale.model.Photographer;
 import com.dvcode.pictale.service.PhotoService;
 import com.dvcode.pictale.service.PhotographerService;
-import com.dvcode.pictale.util.Role;
 
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
 import java.io.IOException;
@@ -14,7 +12,6 @@ import java.util.List;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -22,7 +19,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -34,17 +30,14 @@ public class UserController {
     private static final String ERROR_ARG = "error";
     private static final String LAYOUT_ARG = "layout";
     private static final String PHOTOGRAPHER_ARG = "photographer";
-    private static final String REDIRECT_PHOTOGRAPHERS = "redirect:/admin/photographers";
 
     private final PhotographerService photographerService;
     private final PhotoService photoService;
-    private final BCryptPasswordEncoder passwordEncoder;
 
 
-    public UserController(PhotographerService photographerService, PhotoService photoService, BCryptPasswordEncoder passwordEncoder) {
+    public UserController(PhotographerService photographerService, PhotoService photoService) {
         this.photographerService = photographerService;
         this.photoService = photoService;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping("/home")

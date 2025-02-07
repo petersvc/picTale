@@ -1,0 +1,34 @@
+{
+    "workbench.colorTheme": "Min Dark",
+    "workbench.iconTheme": "symbols",
+    "editor.renderWhitespace": "none",
+    "editor.stickyScroll.enabled": false,
+    "breadcrumbs.enabled": false,
+    "javascript.updateImportsOnFileMove.enabled": "always",
+    "editor.fontFamily": "'JetBrainsMono NF', 'Monospace'",
+    "editor.fontLigatures": true,
+    "editor.fontSize": 13,
+    "editor.lineHeight": 1.5,
+    //"editor.rulers": [80, 120],
+    "editor.renderLineHighlight": "gutter",
+    "editor.scrollbar.vertical": "hidden",
+    "workbench.editor.labelFormat": "short",
+    "explorer.compactFolders": false,
+    "terminal.integrated.fontFamily": "'JetBrainsMono NF', 'Monospace'",
+    "terminal.integrated.fontSize": 12,
+    "explorer.confirmPasteNative": false,
+    "symbols.hidesExplorerArrows": false,
+    "editor.minimap.enabled": false,
+    "[javascript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[json]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "files.autoSave": "afterDelay",
+    "workbench.startupEditor": "none",
+    "security.workspace.trust.untrustedFiles": "open",
+    "explorer.confirmDelete": false,
+    "remote.autoForwardPortsSource": "hybrid",
+    "window.menuBarVisibility": "classic"
+}

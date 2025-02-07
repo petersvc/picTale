@@ -5,7 +5,6 @@ import com.dvcode.pictale.model.Photo;
 import com.dvcode.pictale.service.LikeService;
 import com.dvcode.pictale.service.PhotoService;
 import com.dvcode.pictale.service.PhotographerService;
-import com.dvcode.pictale.util.Role;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.bind.annotation.SessionAttribute;
 
 import org.springframework.web.multipart.MultipartFile;
 

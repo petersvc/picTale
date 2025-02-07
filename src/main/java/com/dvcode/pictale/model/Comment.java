@@ -2,14 +2,11 @@ package com.dvcode.pictale.model;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
-import java.util.Set;
 
 import org.hibernate.annotations.CreationTimestamp;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import jakarta.persistence.Basic;
-import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;

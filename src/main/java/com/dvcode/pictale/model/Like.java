@@ -10,6 +10,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -19,6 +20,7 @@ import lombok.ToString;
 @Table(name = "likes") // Renomeando a tabela
 public class Like {
     @EmbeddedId
+    @NotNull
     private LikeId id;
     
     @ManyToOne(fetch = FetchType.LAZY)

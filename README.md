@@ -14,42 +14,48 @@
 
 ## Tecnologias Utilizadas
 
-- **Java 21**: Utilizado como a linguagem principal para o desenvolvimento do backend.
+- **Java 21**: Linguagem orientada à objetos utilizada no desenvolvimento backend.
 - **Spring Boot**: Framework robusto para a construção de aplicações Java modernas e escaláveis.
-- **Thymeleaf**: Template engine para renderizar as páginas dinâmicas no frontend.
+- **Thymeleaf**: Template engine para renderizar páginas dinâmicas no frontend.
 - **PostgreSQL**: Banco de dados relacional para armazenamento eficiente de dados.
 - **Bootstrap**: Framework de CSS para garantir uma interface responsiva e moderna.
+- **Docker**:  Plataforma de containerização que facilita a criação, o empacotamento e a execução da aplicação e suas dependências em containers isolados.
 
 ---
 
-## Instalação
+## Instalação Via Docker
 
-Para rodar a aplicação em seu ambiente local, siga os passos abaixo:
+Para executar a aplicação via containers Docker, certifique-se de ter o Docker instalado, e siga os passos abaixo:
 
 ### 1. Clone o repositório
 ```bash
 git clone https://github.com/dvcode/pictale.git
 ```
 
-### 2. Instale as dependências
+### 2. Execute a aplicação
+
+- Abra o projeto no vscode.
+- Pressione ctrl+shift+p, digite "Reabrir no container" e clique enter.
+- Após a conclusão da montagem dos containers, abra o terminal interno do vscode e execute o seguinte comando:
+  - ```run!```
+
+## Instalação Local
+
+Certifique-se de ter o java 21, maven e o Postgres instalados. Crie no Postgres um banco chamado pictale, e siga os passos abaixo:
+
+### 1. Clone o repositório
 ```bash
-mvn clean install
+git clone https://github.com/dvcode/pictale.git
 ```
+### 2. Configure o banco de dados
 
-### 3. Configure o banco de dados
+Modifique as configurações do banco de dados no arquivo `src/main/resources/application.yml` para se conectar à sua instância local do PostgreSQL.
 
-Modifique as configurações de banco de dados no arquivo `src/main/resources/application.yml` para conectar com seu PostgreSQL.
-
-### 4. Execute a aplicação
+### 3. Execute a aplicação
 
 Para rodar a aplicação localmente:
 ```bash
 mvn spring-boot:run
-```
-
-Ou, se estiver utilizando um container já configurado:
-```bash
-run!
 ```
 
 ---

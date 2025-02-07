@@ -11,6 +11,5 @@ public class LikeId implements Serializable {
     private Integer photoId;
     private Integer photographerId;
 
-    // Adicionar um valor fixo ou gerar automaticamente
-    private Long serialVersionUID = 1L; // Defina o valor fixo ou gere conforme necessário
+    private Long serialVersionUID = 1L;
 }

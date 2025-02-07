@@ -7,7 +7,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.dvcode.pictale.model.Photographer;
@@ -31,7 +30,7 @@ public class PhotographerController {
             return "redirect:/login";
         }
 
-        Photographer currentUser = photographerService.findByEmail(userDetails.getUsername());
+        photographerService.findByEmail(userDetails.getUsername());
         Photographer photographer = photographerService.findById(id);
         
         model.addAttribute("photographer", photographer);
