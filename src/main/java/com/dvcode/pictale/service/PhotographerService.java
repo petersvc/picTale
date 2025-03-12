@@ -13,9 +13,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.dvcode.pictale.model.Authority;
 import com.dvcode.pictale.model.Follow;
 import com.dvcode.pictale.model.Photographer;
 import com.dvcode.pictale.util.Role;
+import com.dvcode.pictale.repository.AuthorityRepository;
 import com.dvcode.pictale.repository.FollowRepository;
 import com.dvcode.pictale.repository.PhotographerRepository;
 
@@ -24,11 +26,13 @@ import com.dvcode.pictale.repository.PhotographerRepository;
 public class PhotographerService {
     private final PhotographerRepository photographerRepository;
     private final FollowRepository followRepository;
+    private final AuthorityRepository authorityRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 
-    public PhotographerService(PhotographerRepository photographerRepository, FollowRepository followRepository, BCryptPasswordEncoder passwordEncoder) {
+    public PhotographerService(PhotographerRepository photographerRepository, FollowRepository followRepository, AuthorityRepository authorityRepository, BCryptPasswordEncoder passwordEncoder) {
         this.photographerRepository = photographerRepository;
         this.followRepository = followRepository;
+        this.authorityRepository = authorityRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -58,17 +62,59 @@ public class PhotographerService {
     return "/uploads/profile-pictures/" + fileName;
 }
 
+    // public Photographer register(Photographer photographer) {
+    //     if (photographerRepository.findByEmail(photographer.getEmail()).isPresent()) {
+    //         throw new IllegalArgumentException("Email already registered");
+    //     }
+
+    //     // List<Role> roles = photographer.getRoles();
+    //     // roles.add(Role.PHOTOGRAPHER);
+    //     // roles.add(Role.CREATE_COMMENT);
+
+    //     // photographer.setRoles(roles);
+    //     photographer.setSuspended(false);
+    //     photographer.setPassword(passwordEncoder.encode(photographer.getPassword()));
+
+        
+    //     return photographerRepository.save(photographer);
+    // }
 
     public Photographer register(Photographer photographer) {
         if (photographerRepository.findByEmail(photographer.getEmail()).isPresent()) {
             throw new IllegalArgumentException("Email already registered");
         }
-
-        photographer.setRole(Role.PHOTOGRAPHER);
+    
+        // Define senha criptografada e status inicial
         photographer.setSuspended(false);
         photographer.setPassword(passwordEncoder.encode(photographer.getPassword()));
-        
-        return photographerRepository.save(photographer);
+        photographer.setUsername(photographer.getEmail());
+    
+        // Salva primeiro o Photographer
+        Photographer savedPhotographer = photographerRepository.save(photographer);
+        photographerRepository.flush(); // Garante que o ID foi gerado
+    
+        if (savedPhotographer.getId() == null) {
+            throw new IllegalStateException("Photographer ID is null after save!");
+        }
+    
+        System.out.println(savedPhotographer.getId() + "------------------------------------------------------------------------------");
+    
+        // Define authorities padrões
+        List<Authority> defaultAuthorities = List.of(
+            new Authority(null, savedPhotographer, Role.ROLE_PHOTOGRAPHER.name()),
+            new Authority(null, savedPhotographer, Role.ROLE_CREATE_COMMENT.name())
+        );
+    
+        // Salva as authorities no banco
+        authorityRepository.saveAll(defaultAuthorities);
+    
+        return savedPhotographer;
+    }
+    
+
+    public Photographer findByUsername(String username) {
+        return photographerRepository.findByUsername(username)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Photographer not found"));
     }
 
     public Photographer findByEmail(String email) {
@@ -85,7 +131,9 @@ public class PhotographerService {
     }
 
     public boolean isAdmin(Photographer photographer) {
-        return photographer.getRole() == Role.ADMIN;
+        return photographer.getAuthorities().stream()
+            .anyMatch(auth -> auth.getAuthority().equals(Role.ROLE_ADMIN.name()));
+        // return photographer.getRole() == Role.ADMIN;
     }
 
     public void suspend(Integer id) {

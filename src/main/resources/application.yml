@@ -16,7 +16,11 @@ spring:
     show-sql: true
     open-in-view: true
   thymeleaf:
-    cache: false     
+    cache: false
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true  
   web:
     resources:
       static-locations: classpath:/static/, classpath:/public/, classpath:/resources/, classpath:/META-INF/resources/, file:/home/peter-costa/workspace/personal/pictale/uploads/

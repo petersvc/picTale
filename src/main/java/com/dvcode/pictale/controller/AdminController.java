@@ -32,9 +32,15 @@ public class AdminController {
     public String listPhotographers(Model model, @AuthenticationPrincipal UserDetails userDetails) {
         Photographer admin = photographerService.findByEmail(userDetails.getUsername());
         
-        if (!admin.getRole().equals(Role.ADMIN)) {
+        boolean isAdmin = admin.getAuthorities().stream()
+            .anyMatch(auth -> auth.getAuthority().equals(Role.ROLE_ADMIN.name()));
+
+        if (!isAdmin) {
             return "redirect:/login";
         }
+        // if (!admin.getRole().equals(Role.ADMIN)) {
+        //     return "redirect:/login";
+        // }
 
         model.addAttribute("photographers", photographerService.findAll());
         model.addAttribute(CONTENT_ARG, "photographers");

@@ -38,11 +38,15 @@
             >
         </a>
 
-        <!-- Admin Section (only for ADMIN users) -->
-        <div class="ms-3" th:if="${currentUser?.role?.name() == 'ADMIN'}">
+        <!-- Admin Section (only for ADMIN users) th:if="${currentUser?.role?.name() == 'ADMIN'}"-->
+        <div class="ms-3" sec:authorize="hasRole('ROLE_ADMIN')">
             <a href="/admin/photographers" title="Admin Panel">
                 <i class="fas fa-user-shield fa-lg text-white-50"></i>
             </a>
         </div>
+
+        <a href="/logout" title="Sign out" class="ms-3 text-decoration-none text-white-50 fw-bold">
+            Sair
+        </a>
     </div>
 </header>

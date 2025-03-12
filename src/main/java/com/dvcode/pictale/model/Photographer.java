@@ -1,20 +1,15 @@
 package com.dvcode.pictale.model;
 
+import java.util.List;
 import java.util.Set;
-
-import com.dvcode.pictale.util.Role;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -37,6 +32,9 @@ public class Photographer {
     @Column(unique = true)
     private String email;
 
+    @Column(unique = true)
+    private String username;
+
     @NotBlank(message = "Password is required")
     private String password;
 
@@ -44,14 +42,9 @@ public class Photographer {
     private String city;
     private String country;
     private boolean suspended;
-
-    @Enumerated(EnumType.STRING)
-    private Role role = Role.PHOTOGRAPHER;
-
-    @ManyToOne
-    @JoinColumn(name = "username")
-    @ToString.Exclude
-    private User user;
+    
+    @OneToMany(mappedBy = "username", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Authority> authorities;
 
     @OneToMany(mappedBy = "photographer", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @ToString.Exclude

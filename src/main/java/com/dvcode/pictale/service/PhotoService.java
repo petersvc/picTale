@@ -159,5 +159,21 @@ public class PhotoService {
         comment.setPhotographer(photographer);
     
         commentRepository.save(comment);
-    }   
+    }
+
+    public void deleteComment(Integer idComment) {
+        commentRepository.deleteById(idComment);
+    }
+
+    // @Transactional
+    // public void editComment(Integer photoId, String commentText, Photographer photographer) {
+    //     Photo photo = photoRepository.findById(photoId)
+    //             .orElseThrow(() -> new IllegalArgumentException("Foto não encontrada"));
+    
+    //     Comment comment = commentRepository.findByPhotoAndPhotographer(photo, photographer)
+    //             .orElseThrow(() -> new IllegalArgumentException("Comentario nao encontrado"));
+    //     comment.setCommentText(commentText);
+    
+    //     commentRepository.save(comment);
+    // }
 }

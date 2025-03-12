@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,7 +33,7 @@ public class PhotoController {
         this.photographerService = photographerService;
     }
 
-     @GetMapping("/photos/{id}")
+    @GetMapping("/photos/{id}")
     @Transactional(readOnly = true)
     public String getPhoto(Model model, @PathVariable("id") Integer id, @AuthenticationPrincipal UserDetails userDetails) {
         if (userDetails == null) {
@@ -115,6 +116,47 @@ public class PhotoController {
 
         return "redirect:/photos/" + id;
     }
+
+    @DeleteMapping("/photos/{id}/comment/{idComment}")
+    public String deleteComment(@PathVariable("id") Integer id, @PathVariable("idComment") Integer idComment,
+                            @AuthenticationPrincipal UserDetails userDetails,
+                            RedirectAttributes attr) {
+        if (userDetails == null) {
+            return "redirect:/login";
+        }
+
+        Photographer photographer = photographerService.findByEmail(userDetails.getUsername());
+
+        try {
+            photoService.deleteComment(idComment);
+            attr.addFlashAttribute("message", "Comentário deletado com sucesso!");
+        } catch (Exception e) {
+            attr.addFlashAttribute("error", "Erro ao deletar comentário: " + e.getMessage());
+        }
+
+        return "redirect:/photos/" + id;
+    }
+
+    // @PutMapping("/photos/{id}/comment/{commentId}")
+    // public String addComment(@PathVariable("id") Integer id, 
+    //                         @PathVariable("commentId") Integer commentId,
+    //                         @AuthenticationPrincipal UserDetails userDetails,
+    //                         RedirectAttributes attr) {
+    //     if (userDetails == null) {
+    //         return "redirect:/login";
+    //     }
+
+    //     Photographer photographer = photographerService.findByEmail(userDetails.getUsername());
+
+    //     try {
+    //         photoService.addComment(id, commentText, photographer);
+    //         attr.addFlashAttribute("message", "Comentário adicionado com sucesso!");
+    //     } catch (Exception e) {
+    //         attr.addFlashAttribute("error", "Erro ao adicionar comentário: " + e.getMessage());
+    //     }
+
+    //     return "redirect:/photos/" + id;
+    // }
 
 
     @GetMapping("/upload-photo")

@@ -1,11 +1,10 @@
 package com.dvcode.pictale.model;
 
-import java.io.Serializable;
-
 import jakarta.persistence.Column;
-import jakarta.persistence.Embeddable;
-import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -20,23 +19,23 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Authority {
 
-    @EmbeddedId
-    private AuthorityId id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "username", referencedColumnName = "username", insertable = false, updatable = false)
-    private User username;
-    
-    @Column(name = "authority", insertable = false, updatable = false)
+    @JoinColumn(name = "username", referencedColumnName = "username")
+    private Photographer username;
+
+    @Column(name = "authority")
     private String authority;
 
-
-    @Embeddable
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class AuthorityId implements Serializable {
-        private String username;
-        private String authority;
-    }
+    // @Embeddable
+    // @Data
+    // @NoArgsConstructor
+    // @AllArgsConstructor
+    // public static class AuthorityId implements Serializable {
+    //     private String username;
+    //     private String authority;
+    // }
 }

@@ -24,4 +24,7 @@ public interface PhotographerRepository extends JpaRepository<Photographer, Inte
     // Buscar fotógrafos por nome ou email (para pesquisa)
     Page<Photographer> findByNameContainingIgnoreCaseOrEmailContainingIgnoreCase(
         String name, String email, Pageable pageable);
+
+    // @Query("from Photographer p join fetch p.user u where u.username = :username")
+    public Optional<Photographer> findByUsername(String username);
 }

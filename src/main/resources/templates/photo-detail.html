@@ -34,6 +34,11 @@
                             <strong th:text="${comment?.photographer?.name}"></strong> - 
                             <small class="text-muted" th:text="${#temporals.format(comment.createdAt, 'dd/MM/yyyy')} + ' às ' + ${#temporals.format(comment.createdAt, 'HH:mm')}"></small>
                             <br class="mb-1"><span th:text="${comment?.commentText}"></span>
+                            <br class="mt-1">
+                            <form class="mt-3" th:action="@{/photos/{id}/comment/{idComment}(id=${photo.id}, idComment=${comment?.id})}" method="post">
+                                <input type="hidden" name="_method" value="delete"/>
+                                <button type="submit" class="btn btn-danger">Excluir</button>
+                            </form>                            
                         </li>
                     </ul>
                 </div>
