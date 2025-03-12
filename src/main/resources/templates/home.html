@@ -1,4 +1,4 @@
-<div class="container px-0 mx-auto" th:fragment="content">
+<div class="container mt-5 px-0 mx-auto" th:fragment="content">
     <div class="d-flex flex-column align-items-center">
         <!-- <h1 class="text-center mb-4"></h1> -->
         <!-- Início da grade -->
@@ -14,7 +14,7 @@
                             <!-- Nome do fotógrafo alinhado à esquerda -->
                             <a th:href="@{/photographers/{id}(id=${photo.photographer.id})}" 
                                th:text="${photo.photographer.name}" 
-                               class="text-decoration-none text-dark"></a>
+                               class="ms-2 text-decoration-none text-dark"></a>
                             
                             <!-- Likes e comentários alinhados à direita -->
                             <div class="d-flex align-items-center justify-content-between">

@@ -1,14 +1,36 @@
-<div th:fragment="content">
-    <form th:action="@{/upload-photo}" method="post" enctype="multipart/form-data">
-        <label for="file">Choose your photo:</label>
-        <input type="file" id="file" name="file" required><br>
+<div th:fragment="content" 
+     class="border border-0 d-flex flex-column align-items-center justify-content-center m-auto w-50 p-5"
+     style="border-radius: 20px; background-color: rgba(24, 24, 31, 1);">
 
-        <label for="caption">Caption:</label>
-        <input type="text" id="caption" name="caption" required><br>
+    <h1 class="fs-3 fw-bold text-white text-center mb-4">Upload Your Photo</h1>
 
-        <label for="hashtags">Hashtags (separate by commas):</label>
-        <input type="text" id="hashtags" name="hashtags" placeholder="#photography, #nature"><br>
+    <form th:action="@{/upload-photo}" method="post" enctype="multipart/form-data" class="w-100 needs-validation" novalidate>
+        <div class="mb-3">
+            <label for="file" class="form-label text-white">Choose your photo:</label>
+            <input type="file" class="form-control bg-dark text-white border-0" id="file" name="file" required>
+            <div class="invalid-feedback">Please select a file.</div>
+        </div>
 
-        <button type="submit">Upload</button>
+        <div class="mb-3">
+            <label for="caption" class="form-label text-white">Caption:</label>
+            <input type="text" class="form-control bg-dark text-white border-0" id="caption" name="caption" required>
+            <div class="invalid-feedback">Please enter a caption.</div>
+        </div>
+
+        <div class="mb-4">
+            <label for="hashtags" class="form-label text-white">Hashtags (separate by commas):</label>
+            <input type="text" class="form-control text-white border-0" id="hashtags" name="hashtags" placeholder="#photography, #nature">
+        </div>
+
+        <button type="submit" class="w-100 fw-bold"
+            style="background: linear-gradient(90deg, rgba(255, 69, 58, 1) 0%, rgba(216, 88, 216, 1) 100%);
+                   color: white; 
+                   padding: 12px 36px; 
+                   border-radius: 8px; 
+                   text-align: center;
+                   transition: all 0.3s ease-in-out;
+                   border: none;">
+            Upload Photo
+        </button>
     </form>
 </div>
