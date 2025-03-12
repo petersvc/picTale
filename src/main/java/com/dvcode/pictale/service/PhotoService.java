@@ -160,4 +160,18 @@ public class PhotoService {
     
         commentRepository.save(comment);
     }   
+
+    public boolean editComment(Integer commentId, String newText, Photographer photographer) {
+        Comment comment = commentRepository.findById(commentId)
+                                           .orElseThrow(() -> new RuntimeException("Comentário não encontrado"));
+        
+        if (!comment.getPhotographer().getId().equals(photographer.getId())) {
+            return false; // Usuário não pode editar um comentário que não é dele
+        }
+    
+        comment.setCommentText(newText);
+        commentRepository.save(comment);
+        return true;
+    }
+    
 }

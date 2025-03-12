@@ -116,6 +116,34 @@ public class PhotoController {
         return "redirect:/photos/" + id;
     }
 
+    @PostMapping("/photos/{photoId}/comment/{commentId}/edit")
+    public String editComment(@PathVariable("photoId") Integer photoId, 
+                            @PathVariable("commentId") Integer commentId,
+                            @RequestParam("commentText") String commentText,
+                            @AuthenticationPrincipal UserDetails userDetails,
+                          RedirectAttributes attr) {
+        if (userDetails == null) {
+            return "redirect:/login";
+        }
+
+        Photographer photographer = photographerService.findByEmail(userDetails.getUsername());
+
+        try {
+            boolean updated = photoService.editComment(commentId, commentText, photographer);
+            if (updated) {
+                attr.addFlashAttribute("message", "Comentário editado com sucesso!");
+            } else {
+                attr.addFlashAttribute("error", "Você não tem permissão para editar este comentário.");
+            }
+        } catch (Exception e) {
+            attr.addFlashAttribute("error", "Erro ao editar comentário: " + e.getMessage());
+        }
+
+        return "redirect:/photos/" + photoId;
+    }
+
+
+
 
     @GetMapping("/upload-photo")
     public String showUploadForm(Model model, @AuthenticationPrincipal UserDetails userDetails) {
