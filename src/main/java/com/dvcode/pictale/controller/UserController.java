@@ -40,6 +40,13 @@ public class UserController {
         this.photoService = photoService;
     }
 
+    @GetMapping
+    public String showLanding(Model model) {
+        model.addAttribute(PHOTOGRAPHER_ARG, new Photographer());
+        model.addAttribute(CONTENT_ARG, "landing");
+        return LAYOUT_ARG;
+    }
+
     @GetMapping("/home")
     public String home(Model model, @AuthenticationPrincipal UserDetails userDetails) {
         if (userDetails != null) {

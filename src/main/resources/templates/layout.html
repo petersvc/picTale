@@ -10,12 +10,16 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
 </head>
-<body class="d-flex flex-column min-vh-100 px-5 pb-3 pt-4">
+<body class="d-flex flex-column min-vh-100 px-5 pb-3 pt-4 text-white" style="background-color: rgba(16, 18, 24, 1);">
     <header th:replace="~{fragments/header :: header}"></header>
-    <main class="container-fluid flex-grow-1" style="margin-top: 70px;">
+    <!-- <main class="container-fluid flex-grow-1" style="margin-top: 70px;">
         <div th:replace="~{${content}}"></div>
         <div th:replace="~{fragments/toast :: toast}"></div>    
-    </main>
+    </main> -->
+    <main class="container-fluid flex-grow-1 d-flex flex-column align-items-center justify-content-between">
+        <div th:replace="~{${content}}"></div>
+        <div th:replace="~{fragments/toast :: toast}"></div>    
+    </main>    
     <footer th:replace="~{fragments/footer :: footer}"></footer>
     <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
     <script th:src="@{/js/main.js}"></script>

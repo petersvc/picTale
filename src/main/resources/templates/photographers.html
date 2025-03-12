@@ -1,37 +1,39 @@
-<div th:fragment="content">
-    <h1 class="text-center mt-4 mb-4 fs-4">Photographers</h1>
-    <table class="table table-striped table-hover">
-        <thead class="thead-dark">
-            <tr>
-                <th>#</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Status</th>
-                <th class="text-center">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="photographer, iterStat : ${photographers}">
-                <td th:text="${iterStat.index + 1}"></td>
-                <td th:text="${photographer.name}"></td>
-                <td th:text="${photographer.email}"></td>
-                <td th:text="${photographer.suspended ? 'Suspended' : 'Active'}"
-                    th:classappend="${photographer.suspended} ? 'text-danger' : 'text-success'"></td>
-                <td class="text-center">
-                    <form th:action="@{/admin/photographers/{id}/suspend(id=${photographer.id})}" 
-                          method="post" th:if="${!photographer.suspended}">
-                        <button type="submit" class="btn btn-warning btn-sm">
-                            <i class="fa-solid fa-ban"></i> Suspend
-                        </button>
-                    </form>
-                    <form th:action="@{/admin/photographers/{id}/unsuspend(id=${photographer.id})}" 
-                          method="post" th:if="${photographer.suspended}">
-                        <button type="submit" class="btn btn-success btn-sm">
-                            <i class="fa-solid fa-circle-check"></i> Unsuspend
-                        </button>
-                    </form>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+<div th:fragment="content" class="w-75 mt-5">
+    <h1 class="text-center mt-4 mb-4 fs-4 text-white">Photographers</h1>
+    <div class="table-responsive">
+        <table class="table table-dark table-striped table-hover rounded-3 overflow-hidden">
+            <thead class="thead-light">
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Status</th>
+                    <th class="text-center">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="photographer, iterStat : ${photographers}">
+                    <td th:text="${iterStat.index + 1}"></td>
+                    <td th:text="${photographer.name}"></td>
+                    <td th:text="${photographer.email}"></td>
+                    <td th:text="${photographer.suspended ? 'Suspended' : 'Active'}"
+                        th:classappend="${photographer.suspended} ? 'text-danger' : 'text-success'"></td>
+                    <td class="text-center">
+                        <form th:action="@{/admin/photographers/{id}/suspend(id=${photographer.id})}" 
+                              method="post" th:if="${!photographer.suspended}">
+                            <button type="submit" class="btn btn-warning btn-sm">
+                                <i class="fa-solid fa-ban"></i> Suspend
+                            </button>
+                        </form>
+                        <form th:action="@{/admin/photographers/{id}/unsuspend(id=${photographer.id})}" 
+                              method="post" th:if="${photographer.suspended}">
+                            <button type="submit" class="btn btn-success btn-sm">
+                                <i class="fa-solid fa-circle-check"></i> Unsuspend
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>

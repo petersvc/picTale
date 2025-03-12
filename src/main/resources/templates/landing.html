@@ -1,52 +1,49 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pictale - Rede Social para Fotógrafos</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}" />
-    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
-</head>
-<body class="d-flex flex-column min-vh-100">
-    <!-- Navbar no topo -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">Pictale</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="/landing">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/registration">Registro</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/login">Login</a>
-                    </li>
-                </ul>
-            </div>
+<div th:fragment="content" 
+    class="border border-gray border-0 d-flex flex-column align-items-center justify-content-center m-auto w-75 h-60">
+
+    <h1 class="fs-1 font-weight-bold">Join us now</h1>
+    <h2 class="fs-6 mt-2" style="color: rgb(120,120,120);">Connect with photographers worldwide</h2>
+
+    <div class="w-100 flex-grow-1 d-flex align-items-center justify-content-between mt-5 py-5" 
+        style="background-color: rgba(24, 24, 31, 1);">
+        
+        <!-- Sign In -->
+        <div class="d-flex flex-column justify-content-center align-items-center w-100 h-100 py-5" 
+            style="border-right: 1px solid rgba(255, 255, 255, 0.1);">
+            <i class="fa fa-sign-in-alt fa-2x text-white-50"></i>
+            <a class="text-decoration-none fs-3 fw-bold my-3" style="color: rgba(255, 255, 255, 1);" href="/login">Sign in</a>
+            <p class="fs-6 text-white-50 mb-3">Access your account</p>
+            <a href="/login" class="text-decoration-none fw-bold mt-5" 
+                style="background: linear-gradient(90deg, rgba(255, 69, 58, 1) 0%, rgba(216, 88, 216, 1) 100%);
+                       color: white; 
+                       padding: 12px 36px; 
+                       border-radius: 4px; 
+                       text-align: center;
+                       transition: all 0.3s ease-in-out;
+                       display: inline-block;
+                       margin-top: 10px;">
+               Sign in now
+            </a>
         </div>
-    </nav>
+        
+        <!-- Sign Up -->
+        <div class="d-flex flex-column justify-content-center align-items-center w-100 h-100 py-5">
+            <i class="fa fa-user-plus fa-2x text-white-50"></i>
+            <a class="text-decoration-none fs-3 fw-bold my-3" style="color: rgba(255, 255, 255, 1);" href="/registration">Sign up</a>
+            <p class="fs-6 text-white-50 mb-3">Create a new account</p>
+            <a href="/registration" class="text-decoration-none fw-bold mt-5" 
+                style="background: linear-gradient(90deg, rgba(255, 69, 58, 1) 0%, rgba(216, 88, 216, 1) 100%);
+                       color: white; 
+                       padding: 12px 36px; 
+                       border-radius: 4px; 
+                       text-align: center;
+                       transition: all 0.3s ease-in-out;
+                       display: inline-block;
+                       margin-top: 10px;">
+                Sign up now
+            </a>
+        </div>
 
-    <!-- Seção centralizada -->
-    <main class="flex-grow-1 d-flex flex-column justify-content-center align-items-center text-center">
-        <section class="landing-section">
-            <h1>Bem-vindo ao Pictale</h1>
-            <p>Uma plataforma inovadora para fotógrafos compartilharem seu trabalho, conectarem-se e se destacarem na comunidade.</p>
-            <a href="/registration" class="btn btn-primary">Cadastre-se agora</a>
-            <p>Já tem uma conta? <a href="/login" class="text-decoration-none">Faça login</a></p>
-        </section>
-    </main>
-
-    <!-- Footer no rodapé -->
-    <footer class="footer bg-dark text-white text-center py-3">
-        <p>&copy; 2025 Pictale. Todos os direitos reservados.</p>
-    </footer>
-
-    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
-</body>
-</html>
+    </div>
+    
+</div>
