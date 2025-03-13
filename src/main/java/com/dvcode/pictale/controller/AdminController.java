@@ -1,5 +1,9 @@
 package com.dvcode.pictale.controller;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.dvcode.pictale.model.Photographer;
@@ -28,19 +33,46 @@ public class AdminController {
         this.photographerService = photographerService;
     }
 
-    @GetMapping("/photographers")
-    public String listPhotographers(Model model, @AuthenticationPrincipal UserDetails userDetails) {
-        Photographer admin = photographerService.findByEmail(userDetails.getUsername());
+    // @GetMapping("/photographers")
+    // public String listPhotographers(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+    //     Photographer admin = photographerService.findByEmail(userDetails.getUsername());
         
-        boolean isAdmin = admin.getAuthorities().stream()
-            .anyMatch(auth -> auth.getAuthority().equals(Role.ROLE_ADMIN.name()));
+    //     boolean isAdmin = admin.getAuthorities().stream()
+    //         .anyMatch(auth -> auth.getAuthority().equals(Role.ROLE_ADMIN.name()));
 
+    //     if (!isAdmin) {
+    //         return "redirect:/login";
+    //     }
+
+    //     model.addAttribute("photographers", photographerService.findAll());
+    //     model.addAttribute(CONTENT_ARG, "photographers");
+    //     return LAYOUT_ARG;
+    // }
+
+    @GetMapping("/photographers")
+    public String listPhotographers(
+            Model model, 
+            @AuthenticationPrincipal UserDetails userDetails,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "1") int size) {
+        
+        Photographer admin = photographerService.findByEmail(userDetails.getUsername());
+        boolean isAdmin = admin.getAuthorities().stream()
+                .anyMatch(auth -> auth.getAuthority().equals(Role.ROLE_ADMIN.name()));
+        
         if (!isAdmin) {
             return "redirect:/login";
         }
-
-        model.addAttribute("photographers", photographerService.findAll());
+        
+        Pageable pageable = PageRequest.of(page, size, Sort.by("name").ascending());
+        Page<Photographer> photographerPage = photographerService.findAll(pageable);
+        
+        model.addAttribute("photographers", photographerPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", photographerPage.getTotalPages());
+        model.addAttribute("totalItems", photographerPage.getTotalElements());
         model.addAttribute(CONTENT_ARG, "photographers");
+        
         return LAYOUT_ARG;
     }
 

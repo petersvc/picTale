@@ -1,39 +1,81 @@
 <div th:fragment="content" class="w-75 mt-5">
     <h1 class="text-center mt-4 mb-4 fs-4 text-white">Photographers</h1>
     <div class="table-responsive">
-        <table class="table table-dark table-striped table-hover rounded-3 overflow-hidden">
-            <thead class="thead-light">
-                <tr>
-                    <th>#</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Status</th>
-                    <th class="text-center">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="photographer, iterStat : ${photographers}">
-                    <td th:text="${iterStat.index + 1}"></td>
-                    <td th:text="${photographer.name}"></td>
-                    <td th:text="${photographer.email}"></td>
-                    <td th:text="${photographer.suspended ? 'Suspended' : 'Active'}"
-                        th:classappend="${photographer.suspended} ? 'text-danger' : 'text-success'"></td>
-                    <td class="text-center">
-                        <form th:action="@{/admin/photographers/{id}/suspend(id=${photographer.id})}" 
-                              method="post" th:if="${!photographer.suspended}">
-                            <button type="submit" class="btn btn-warning btn-sm">
-                                <i class="fa-solid fa-ban"></i> Suspend
-                            </button>
-                        </form>
-                        <form th:action="@{/admin/photographers/{id}/unsuspend(id=${photographer.id})}" 
-                              method="post" th:if="${photographer.suspended}">
-                            <button type="submit" class="btn btn-success btn-sm">
-                                <i class="fa-solid fa-circle-check"></i> Unsuspend
-                            </button>
-                        </form>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+      <table class="table table-dark table-striped table-hover rounded-3 overflow-hidden">
+        <thead class="thead-light">
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Status</th>
+            <th class="text-center">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="photographer, iterStat : ${photographers}">
+            <td th:text="${photographer.id}"></td>
+            <td th:text="${photographer.name}"></td>
+            <td th:text="${photographer.email}"></td>
+            <td th:text="${photographer.suspended ? 'Suspended' : 'Active'}"
+                th:classappend="${photographer.suspended} ? 'text-danger' : 'text-success'"></td>
+            <td class="text-center">
+              <form th:action="@{/admin/photographers/{id}/suspend(id=${photographer.id})}"
+                    method="post" th:if="${!photographer.suspended}">
+                <button type="submit" class="btn btn-warning btn-sm">
+                  <i class="fa-solid fa-ban"></i> Suspend
+                </button>
+              </form>
+              <form th:action="@{/admin/photographers/{id}/unsuspend(id=${photographer.id})}"
+                    method="post" th:if="${photographer.suspended}">
+                <button type="submit" class="btn btn-success btn-sm">
+                  <i class="fa-solid fa-circle-check"></i> Unsuspend
+                </button>
+              </form>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
+    
+    <!-- Paginação -->
+    <div class="d-flex justify-content-center mt-4" th:if="${totalPages > 1}">
+      <nav aria-label="Page navigation">
+        <ul class="pagination">
+          <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+            <a class="page-link" th:href="@{/admin/photographers(page=0)}" aria-label="First">
+              <span aria-hidden="true">&laquo;&laquo;</span>
+            </a>
+          </li>
+          <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+            <a class="page-link" th:href="@{/admin/photographers(page=${currentPage - 1})}" aria-label="Previous">
+              <span aria-hidden="true">&laquo;</span>
+            </a>
+          </li>
+          
+          <!-- Páginas numeradas -->
+          <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}" 
+              th:if="${i >= currentPage - 2 and i <= currentPage + 2}"
+              th:classappend="${currentPage == i} ? 'active'">
+            <a class="page-link" th:href="@{/admin/photographers(page=${i})}" th:text="${i + 1}"></a>
+          </li>
+          
+          <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
+            <a class="page-link" th:href="@{/admin/photographers(page=${currentPage + 1})}" aria-label="Next">
+              <span aria-hidden="true">&raquo;</span>
+            </a>
+          </li>
+          <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
+            <a class="page-link" th:href="@{/admin/photographers(page=${totalPages - 1})}" aria-label="Last">
+              <span aria-hidden="true">&raquo;&raquo;</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+    
+    <div class="text-center mt-2 text-muted text-white-50" th:if="${totalItems > 0}">
+      Mostrando <span th:text="${photographers.size()}"></span> de 
+      <span th:text="${totalItems}"></span> fotógrafos
+    </div>
+  </div>
 </div>

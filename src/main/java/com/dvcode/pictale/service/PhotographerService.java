@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.hibernate.Hibernate;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -126,8 +128,13 @@ public class PhotographerService {
         return photographerRepository.findByEmailAndPassword(email, password)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid email or password"));
     }
-    public List<Photographer> findAll() {
-        return photographerRepository.findAllByOrderByNameAsc();
+
+    // public List<Photographer> findAll() {
+    //     return photographerRepository.findAllByOrderByNameAsc();
+    // }
+
+    public Page<Photographer> findAll(Pageable pageable) {
+        return photographerRepository.findAllByOrderByNameAsc(pageable);
     }
 
     public boolean isAdmin(Photographer photographer) {

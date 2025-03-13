@@ -16,8 +16,12 @@ public interface PhotographerRepository extends JpaRepository<Photographer, Inte
     Optional<Photographer> findByEmailAndPassword(String email, String password);
     
     // Para busca paginada de fotógrafos (caso de uso do admin)
-    List<Photographer> findAllByOrderByNameAsc();
+    // List<Photographer> findAllByOrderByNameAsc();
+
+    Page<Photographer> findAllByOrderByNameAsc(Pageable pageable);
     
+    List<Photographer> findAllByOrderByNameAsc();
+
     // Buscar fotógrafos não suspensos
     Page<Photographer> findBySuspendedFalseOrderByNameAsc(Pageable pageable);
     

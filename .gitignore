@@ -32,3 +32,8 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Adicionando as pastas mencionadas
+.devcontainer/
+photos/
+profile-pictures/
