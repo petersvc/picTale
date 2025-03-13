@@ -14,7 +14,7 @@
             <p class="fs-6 text-white-50 mb-4">Create a new account</p>
 
             <form th:action="@{/registration}" th:object="${photographer}" method="post" enctype="multipart/form-data" 
-                  class="w-50 needs-validation mt-4" novalidate>
+                  class="w-50 needs-validation mt-4">
                 
                 <div class="mb-3">
                     <input type="text" class="form-control text-left py-2" id="name" th:field="*{name}" 

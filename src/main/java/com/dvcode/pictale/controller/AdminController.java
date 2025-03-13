@@ -38,9 +38,6 @@ public class AdminController {
         if (!isAdmin) {
             return "redirect:/login";
         }
-        // if (!admin.getRole().equals(Role.ADMIN)) {
-        //     return "redirect:/login";
-        // }
 
         model.addAttribute("photographers", photographerService.findAll());
         model.addAttribute(CONTENT_ARG, "photographers");

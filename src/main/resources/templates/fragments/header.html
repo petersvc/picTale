@@ -11,7 +11,7 @@
     </div>
 
     <!-- Navigation -->
-    <div class="d-flex justify-content-center col-5" th:if="${currentUser != null}">
+    <div class="d-flex justify-content-center col-5" sec:authorize="isAuthenticated()">
         <a class="nav-link mx-3" href="/home" title="Home">
             <i class="fa fa-home fa-lg"></i>
         </a>
@@ -24,7 +24,7 @@
     </div>
 
     <!-- Following Count & Profile Picture -->
-    <div class="d-flex justify-content-end align-items-center col-3" th:if="${currentUser != null}">
+    <div class="d-flex justify-content-end align-items-center col-3" sec:authorize="isAuthenticated()">
         <a class="me-3 text-decoration-none text-white-50 fw-bold" 
            th:text="${followingCount != null ? 'Seguindo ' + followingCount : ''}" 
            href="/following">

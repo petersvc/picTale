@@ -6,7 +6,7 @@
                 <div class="d-flex justify-content-between align-items-center mt-3">
                     
                     <p><a
-                        class="text-decoration-none text-dark"
+                        class="text-decoration-none text-white"
                         th:href="@{/photographers/{id}(id=${photo.photographer.id})}" 
                         th:text="${photo?.photographer?.name} + ': ' + ${photo.caption}"></a></p>                
                     <form th:action="@{/photos/{id}/like(id=${photo.id})}" method="post">

@@ -73,19 +73,20 @@ public class UserController {
     }
     
     @PostMapping("/registration")
-    public String register(@Valid Photographer photographer, 
-                        BindingResult result,
-                        @RequestParam("profilePicture") MultipartFile profilePicture,
-                        RedirectAttributes attr) {
-        // if (result.hasErrors()) {
-        //     System.out.println("entrou no if 1");
-        //     attr.addFlashAttribute(CONTENT_ARG, "registration :: content");
-        //     return LAYOUT_ARG;
-        // }
+    public String register(Model model, @Valid Photographer photographer,
+                            BindingResult result,
+                            @RequestParam("profilePicture") MultipartFile profilePicture,
+                            RedirectAttributes attr) {
+        if (result.hasErrors()) {
+            System.out.println("entrou no if 1");
+            model.addAttribute("photographer", photographer);
+            // FIX: Add content to the model directly
+            model.addAttribute(CONTENT_ARG, "registration :: content");
+            return LAYOUT_ARG;
+        }
 
         try {
             if (!profilePicture.isEmpty()) {
-                System.out.println("entrou no if 2");
                 String profilePictureUrl = photographerService.uploadProfilePicture(profilePicture);
                 photographer.setProfilePicture(profilePictureUrl);
             }
@@ -93,9 +94,9 @@ public class UserController {
             attr.addFlashAttribute(MESSAGE_ARG, "Registration successful!");
             return "redirect:/login";
         } catch (IOException e) {
-            System.out.println("entrou no catch");
             attr.addFlashAttribute(ERROR_ARG, "Error uploading profile picture: " + e.getMessage());
-            attr.addFlashAttribute(CONTENT_ARG, "registration :: content");
+            // FIX: Add content to the model directly
+            model.addAttribute(CONTENT_ARG, "registration :: content");
             return LAYOUT_ARG;
         }
     }
