@@ -54,7 +54,7 @@ public class AdminController {
             Model model, 
             @AuthenticationPrincipal UserDetails userDetails,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "1") int size) {
+            @RequestParam(defaultValue = "3") int size) {
         
         Photographer admin = photographerService.findByEmail(userDetails.getUsername());
         boolean isAdmin = admin.getAuthorities().stream()

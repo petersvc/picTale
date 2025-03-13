@@ -1,4 +1,6 @@
-<div class="position-absolute top-0 end-0 p-3" th:fragment="toast">
+<div class="position-absolute top-0 end-0 p-3" 
+     style="z-index: 1050;" th:fragment="toast">
+
     <div th:if="${message}" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="3000">
         <div class="d-flex">
             <div class="toast-body">

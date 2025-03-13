@@ -16,6 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.dvcode.pictale.repository.PhotoTagRepository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -138,9 +140,14 @@ public class PhotoService {
         return photoRepository.findAll();
     }
 
+    // @Transactional
+    // public List<Photo> getTimelinePhotos(Photographer photographer) {
+    //     return photoRepository.findByPhotographerNot(photographer, photographer);
+    // }
+
     @Transactional
-    public List<Photo> getTimelinePhotos(Photographer photographer) {
-        return photoRepository.findByPhotographerNot(photographer, photographer);
+    public Page<Photo> getTimelinePhotos(Photographer photographer, Pageable pageable) {
+        return photoRepository.findByPhotographerNot(photographer, photographer, pageable);
     }
 
     @Transactional(readOnly = true)

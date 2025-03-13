@@ -10,6 +10,10 @@ import jakarta.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -48,13 +52,22 @@ public class UserController {
     }
 
     @GetMapping("/home")
-    public String home(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+    public String home(
+            Model model, 
+            @AuthenticationPrincipal UserDetails userDetails,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "2") int size) {
+
         if (userDetails != null) {
             Photographer currentUser = photographerService.findByEmail(userDetails.getUsername());
             
-            List<Photo> photos = photoService.getTimelinePhotos(currentUser);
+            Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+            Page<Photo> photoPage = photoService.getTimelinePhotos(currentUser, pageable);
             
-            model.addAttribute("photos", photos);
+            model.addAttribute("photos", photoPage.getContent());
+            model.addAttribute("currentPage", page);
+            model.addAttribute("totalPages", photoPage.getTotalPages());
+            model.addAttribute("totalItems", photoPage.getTotalElements());
             model.addAttribute("currentUser", currentUser);
             model.addAttribute(CONTENT_ARG, "home");
             model.addAttribute("followingCount", photographerService.getFollowingCount(currentUser.getId()));
@@ -64,6 +77,24 @@ public class UserController {
         
         return "landing";
     }
+
+    // @GetMapping("/home")
+    // public String home(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+    //     if (userDetails != null) {
+    //         Photographer currentUser = photographerService.findByEmail(userDetails.getUsername());
+            
+    //         List<Photo> photos = photoService.getTimelinePhotos(currentUser);
+            
+    //         model.addAttribute("photos", photos);
+    //         model.addAttribute("currentUser", currentUser);
+    //         model.addAttribute(CONTENT_ARG, "home");
+    //         model.addAttribute("followingCount", photographerService.getFollowingCount(currentUser.getId()));
+            
+    //         return LAYOUT_ARG;
+    //     }
+        
+    //     return "landing";
+    // }
     
     @GetMapping("/registration")
     public String showRegistration(Model model) {
