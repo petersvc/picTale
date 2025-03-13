@@ -25,7 +25,7 @@ public class Authority {
 
     @ManyToOne
     @JoinColumn(name = "username", referencedColumnName = "username")
-    private Photographer username;
+    private Photographer photographer;
 
     @Column(name = "authority")
     private String authority;

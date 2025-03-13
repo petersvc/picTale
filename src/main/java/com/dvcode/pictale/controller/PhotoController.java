@@ -6,6 +6,7 @@ import com.dvcode.pictale.service.LikeService;
 import com.dvcode.pictale.service.PhotoService;
 import com.dvcode.pictale.service.PhotographerService;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -96,6 +97,7 @@ public class PhotoController {
         return "redirect:/photos/" + id;
     }
 
+    @PreAuthorize("hasAuthority('ROLE_CREATE_COMMENT')")
     @PostMapping("/photos/{id}/comment")
     public String addComment(@PathVariable("id") Integer id, 
                             @RequestParam("commentText") String commentText,

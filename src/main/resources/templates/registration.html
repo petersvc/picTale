@@ -1,62 +1,72 @@
-<div th:fragment="content" 
-    class="border border-gray border-0 d-flex flex-column align-items-center justify-content-center m-auto w-50 h-60" 
-    style="border-radius: 100px;">
-    
-    <!-- <h1 class="fs-1 fw-bold">Join Us</h1>
-    <h2 class="fs-6 mt-2" style="color: rgb(120,120,120);">Create your account</h2> -->
+<div th:fragment="content"
+     class="border border-gray border-0 d-flex flex-column align-items-center justify-content-center m-auto w-50 h-60"
+     style="border-radius: 100px;">
 
-    <div class="w-100 flex-grow-1 d-flex align-items-center justify-content-center mt-5 py-5" 
-        style="background-color: rgba(24, 24, 31, 1);">
-        
+    <div class="w-100 flex-grow-1 d-flex align-items-center justify-content-center mt-5 py-5"
+         style="background-color: rgba(24, 24, 31, 1);">
+
         <div class="d-flex flex-column justify-content-center align-items-center w-100 h-100 py-5">
             <i class="fa fa-user-plus fa-2x text-white-50"></i>
             <h2 class="fs-3 fw-bold my-3 text-white">Sign Up</h2>
             <p class="fs-6 text-white-50 mb-4">Create a new account</p>
 
-            <form th:action="@{/registration}" th:object="${photographer}" method="post" enctype="multipart/form-data" 
+            <!-- Exibir mensagens de erro gerais -->
+            <div th:if="${error}" class="alert alert-danger w-50 text-center mb-3" role="alert">
+                <span th:text="${error}"></span>
+            </div>
+
+            <form th:action="@{/registration}" th:object="${photographer}" method="post" enctype="multipart/form-data"
                   class="w-50 needs-validation mt-4">
-                
+
                 <div class="mb-3">
-                    <input type="text" class="form-control text-left py-2" id="name" th:field="*{name}" 
+                    <input type="text" class="form-control text-left py-2"
+                           th:classappend="${#fields.hasErrors('name')} ? 'is-invalid' : ''"
+                           id="name" th:field="*{name}"
                            placeholder="Full Name" required>
-                    <div class="invalid-feedback" th:if="${#fields.hasErrors('name')}" th:text="${#fields.errors('name')}"></div>
-                </div>
-                
-                <div class="mb-3">
-                    <input type="email" class="form-control text-left py-2" id="email" th:field="*{email}" 
-                           placeholder="Email Address" required>
-                    <div class="invalid-feedback" th:if="${#fields.hasErrors('email')}" th:text="${#fields.errors('email')}"></div>
-                </div>
-                
-                <div class="mb-3">
-                    <input type="password" class="form-control text-left py-2" id="password" th:field="*{password}" 
-                           placeholder="Password" required>
-                    <div class="invalid-feedback" th:if="${#fields.hasErrors('password')}" th:text="${#fields.errors('password')}"></div>
-                </div>
-                
-                <div class="mb-3">
-                    <input type="text" class="form-control text-left py-2" id="city" th:field="*{city}" 
-                           placeholder="City">
-                    <div class="invalid-feedback" th:if="${#fields.hasErrors('city')}" th:text="${#fields.errors('city')}"></div>
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
                 </div>
 
                 <div class="mb-3">
-                    <input type="text" class="form-control text-left py-2" id="country" th:field="*{country}" 
+                    <input type="email" class="form-control text-left py-2"
+                           th:classappend="${#fields.hasErrors('email')} ? 'is-invalid' : ''"
+                           id="email" th:field="*{email}"
+                           placeholder="Email Address" required>
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+                </div>
+
+                <div class="mb-3">
+                    <input type="password" class="form-control text-left py-2"
+                           th:classappend="${#fields.hasErrors('password')} ? 'is-invalid' : ''"
+                           id="password" th:field="*{password}"
+                           placeholder="Password" required>
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+                </div>
+
+                <div class="mb-3">
+                    <input type="text" class="form-control text-left py-2"
+                           th:classappend="${#fields.hasErrors('city')} ? 'is-invalid' : ''"
+                           id="city" th:field="*{city}"
+                           placeholder="City">
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('city')}" th:errors="*{city}"></div>
+                </div>
+
+                <div class="mb-3">
+                    <input type="text" class="form-control text-left py-2"
+                           th:classappend="${#fields.hasErrors('country')} ? 'is-invalid' : ''"
+                           id="country" th:field="*{country}"
                            placeholder="Country">
-                    <div class="invalid-feedback" th:if="${#fields.hasErrors('country')}" th:text="${#fields.errors('country')}"></div>
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('country')}" th:errors="*{country}"></div>
                 </div>
 
                 <div class="mb-3">
                     <input type="file" class="form-control text-left py-2" id="profilePicture" name="profilePicture">
-                    <div class="invalid-feedback" th:if="${#fields.hasErrors('profilePicture')}" 
-                         th:text="${#fields.errors('profilePicture')}"></div>
                 </div>
 
                 <button type="submit" class="text-decoration-none fw-bold w-100 mt-4"
-                    style="background: linear-gradient(90deg, rgba(255, 69, 58, 1) 0%, rgba(216, 88, 216, 1) 100%);
-                           color: white; 
-                           padding: 12px 36px; 
-                           border-radius: 8px; 
+                        style="background: linear-gradient(90deg, rgba(255, 69, 58, 1) 0%, rgba(216, 88, 216, 1) 100%);
+                           color: white;
+                           padding: 12px 36px;
+                           border-radius: 8px;
                            text-align: center;
                            transition: all 0.3s ease-in-out;
                            display: inline-block;
@@ -65,7 +75,8 @@
                 </button>
             </form>
 
-            <a href="/login" class="mt-4 text-white-50 text-decoration-none">Already have an account? <span class="fw-bold text-white">Sign in</span></a>
+            <a href="/login" class="mt-4 text-white-50 text-decoration-none">Already have an account? <span
+                    class="fw-bold text-white">Sign in</span></a>
         </div>
     </div>
 </div>

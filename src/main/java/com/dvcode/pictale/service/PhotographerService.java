@@ -2,6 +2,7 @@ package com.dvcode.pictale.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -179,6 +180,66 @@ public class PhotographerService {
 
         return following;
 
+    }
+
+    @Transactional(readOnly = true)
+    public Photographer findByIdWithAuthorities(Integer id) {
+        Photographer photographer = photographerRepository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Photographer not found"));
+        
+        // Inicializa a coleção de autoridades explicitamente
+        Hibernate.initialize(photographer.getAuthorities());
+        
+        return photographer;
+    }
+
+    public void suspendCommentAbility(Integer id) {
+        Photographer photographer = findByIdWithAuthorities(id);
+        
+        // Encontrar e remover a autoridade corretamente
+        List<Authority> authorities = photographer.getAuthorities();
+        List<Authority> toRemove = new ArrayList<>();
+        
+        for (Authority auth : authorities) {
+            if (Role.ROLE_CREATE_COMMENT.name().equals(auth.getAuthority())) {
+                toRemove.add(auth);
+            }
+        }
+        
+        // Remover as autoridades da lista do fotógrafo
+        authorities.removeAll(toRemove);
+        
+        // Remover as autoridades do banco de dados
+        for (Authority auth : toRemove) {
+            authorityRepository.delete(auth);
+        }
+        
+        // Salvar o fotógrafo atualizado
+        photographerRepository.save(photographer);
+    }
+
+    public void unsuspendCommentAbility(Integer id) {
+        Photographer photographer = findByIdWithAuthorities(id);
+        
+        // Verificar se já tem a autoridade
+        boolean hasCommentAuthority = photographer.getAuthorities().stream()
+            .anyMatch(auth -> auth.getAuthority().equals(Role.ROLE_CREATE_COMMENT.name()));
+        
+        // Adicionar a autoridade se não tiver
+        if (!hasCommentAuthority) {
+            Authority commentAuthority = new Authority(null, photographer, Role.ROLE_CREATE_COMMENT.name());
+            authorityRepository.save(commentAuthority);
+            photographer.getAuthorities().add(commentAuthority);
+        }
+        
+        photographerRepository.save(photographer);
+    }
+
+    public boolean canComment(Integer id) {
+        Photographer photographer = findByIdWithAuthorities(id);
+        
+        return photographer.getAuthorities().stream()
+            .anyMatch(auth -> auth.getAuthority().equals(Role.ROLE_CREATE_COMMENT.name()));
     }
 
 }

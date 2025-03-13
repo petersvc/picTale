@@ -8,7 +8,6 @@ import com.dvcode.pictale.service.PhotographerService;
 import jakarta.validation.Valid;
 
 import java.io.IOException;
-import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

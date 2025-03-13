@@ -43,7 +43,7 @@ public class Photographer {
     private String country;
     private boolean suspended;
     
-    @OneToMany(mappedBy = "username", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "photographer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Authority> authorities;
 
     @OneToMany(mappedBy = "photographer", fetch = FetchType.LAZY, cascade = CascadeType.ALL)

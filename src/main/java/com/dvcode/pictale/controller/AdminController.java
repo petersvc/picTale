@@ -49,6 +49,33 @@ public class AdminController {
     //     return LAYOUT_ARG;
     // }
 
+    // @GetMapping("/photographers")
+    // public String listPhotographers(
+    //         Model model, 
+    //         @AuthenticationPrincipal UserDetails userDetails,
+    //         @RequestParam(defaultValue = "0") int page,
+    //         @RequestParam(defaultValue = "3") int size) {
+        
+    //     Photographer admin = photographerService.findByEmail(userDetails.getUsername());
+    //     boolean isAdmin = admin.getAuthorities().stream()
+    //             .anyMatch(auth -> auth.getAuthority().equals(Role.ROLE_ADMIN.name()));
+        
+    //     if (!isAdmin) {
+    //         return "redirect:/login";
+    //     }
+        
+    //     Pageable pageable = PageRequest.of(page, size, Sort.by("name").ascending());
+    //     Page<Photographer> photographerPage = photographerService.findAll(pageable);
+        
+    //     model.addAttribute("photographers", photographerPage.getContent());
+    //     model.addAttribute("currentPage", page);
+    //     model.addAttribute("totalPages", photographerPage.getTotalPages());
+    //     model.addAttribute("totalItems", photographerPage.getTotalElements());
+    //     model.addAttribute(CONTENT_ARG, "photographers");
+        
+    //     return LAYOUT_ARG;
+    // }
+
     @GetMapping("/photographers")
     public String listPhotographers(
             Model model, 
@@ -71,6 +98,7 @@ public class AdminController {
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", photographerPage.getTotalPages());
         model.addAttribute("totalItems", photographerPage.getTotalElements());
+        model.addAttribute("photographerService", photographerService);  // Adicionando o serviço ao modelo
         model.addAttribute(CONTENT_ARG, "photographers");
         
         return LAYOUT_ARG;
@@ -87,6 +115,20 @@ public class AdminController {
     public String unsuspendPhotographer(@PathVariable Integer id, RedirectAttributes attr) {
         photographerService.unsuspend(id);
         attr.addFlashAttribute(MESSAGE_ARG, "Photographer unsuspended successfully!");
+        return "redirect:/admin/photographers";
+    }
+
+    @PostMapping("/photographers/{id}/suspend-comment")
+    public String suspendPhotographerComment(@PathVariable Integer id, RedirectAttributes attr) {
+        photographerService.suspendCommentAbility(id);
+        attr.addFlashAttribute(MESSAGE_ARG, "Comment ability suspended successfully!");
+        return "redirect:/admin/photographers";
+    }
+
+    @PostMapping("/photographers/{id}/unsuspend-comment")
+    public String unsuspendPhotographerComment(@PathVariable Integer id, RedirectAttributes attr) {
+        photographerService.unsuspendCommentAbility(id);
+        attr.addFlashAttribute(MESSAGE_ARG, "Comment ability restored successfully!");
         return "redirect:/admin/photographers";
     }
 }
