@@ -36,17 +36,20 @@
                             <br class="mb-1"><span th:text="${comment?.commentText}"></span>
                             <br class="mt-1">
                             <th:block th:if="${#authentication != null and #authentication.name == comment.photographer.email}">
-                                <button class="btn btn-sm btn-primary edit-comment-btn" th:attr="onclick='showEditForm(&quot;' + ${comment.id} + '&quot;)'">Editar</button>
-                                <form th:action="@{/photos/{photoId}/comment/{commentId}/edit(photoId=${photo.id}, commentId=${comment.id})}" method="post" class="mt-2 d-none" th:id="'edit-form-' + ${comment.id}">
-                                    <textarea class="form-control" name="commentText" th:text="${comment.commentText}"></textarea>
-                                    <button type="submit" class="btn btn-sm btn-success mt-2">Salvar</button>
-                                    <button type="button" class="btn btn-sm btn-secondary mt-2" th:attr="onclick='hideEditForm(&quot;' + ${comment.id} + '&quot;)'">Cancelar</button>
-                                </form>
+                                <div class="d-flex align-items-center mt-3 flex-row">
+                                    <button class="btn btn-sm btn-primary edit-comment-btn" th:attr="onclick='showEditForm(&quot;' + ${comment.id} + '&quot;)'">Editar</button>
+                                    <form th:action="@{/photos/{photoId}/comment/{commentId}/edit(photoId=${photo.id}, commentId=${comment.id})}" method="post" class="mt-2 d-none" th:id="'edit-form-' + ${comment.id}">
+                                        <textarea class="form-control" name="commentText" th:text="${comment.commentText}"></textarea>
+                                        <button type="submit" class="btn btn-sm btn-success mt-2">Salvar</button>
+                                        <button type="button" class="btn btn-sm btn-secondary mt-2" th:attr="onclick='hideEditForm(&quot;' + ${comment.id} + '&quot;)'">Cancelar</button>
+                                    </form>
+                                
+                                    <form class="ml-2" style="margin-left: 20px;" th:action="@{/photos/{id}/comment/{idComment}(id=${photo.id}, idComment=${comment?.id})}" method="post">
+                                        <input type="hidden" name="_method" value="delete"/>
+                                        <button type="submit" class="btn btn-sm btn-danger">Excluir</button>
+                                    </form>
+                                </div>                                
                             </th:block>
-                            <form class="mt-3" th:action="@{/photos/{id}/comment/{idComment}(id=${photo.id}, idComment=${comment?.id})}" method="post">
-                                <input type="hidden" name="_method" value="delete"/>
-                                <button type="submit" class="btn btn-danger">Excluir</button>
-                            </form>
                         </li>
                     </ul>
                 </div>
