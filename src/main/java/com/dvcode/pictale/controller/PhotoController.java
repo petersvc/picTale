@@ -137,6 +137,28 @@ public class PhotoController {
         return "redirect:/photos/" + id;
     }
 
+    @PostMapping("/photos/{photoId}/comment/{commentId}/edit")
+    public String editComment(@PathVariable("photoId") Integer photoId,
+                              @PathVariable("commentId") Integer commentId,
+                              @RequestParam("commentText") String commentText,
+                              @AuthenticationPrincipal UserDetails userDetails,
+                              RedirectAttributes attr) {
+        if (userDetails == null) {
+            return "redirect:/login";
+        }
+
+        Photographer photographer = photographerService.findByEmail(userDetails.getUsername());
+
+        try {
+            photoService.editComment(commentId, commentText, photographer);
+            attr.addFlashAttribute("message", "Comentário editado com sucesso!");
+        } catch (Exception e) {
+            attr.addFlashAttribute("error", "Erro ao editar comentário: " + e.getMessage());
+        }
+
+        return "redirect:/photos/" + photoId;
+    }
+
     // @PutMapping("/photos/{id}/comment/{commentId}")
     // public String addComment(@PathVariable("id") Integer id, 
     //                         @PathVariable("commentId") Integer commentId,
