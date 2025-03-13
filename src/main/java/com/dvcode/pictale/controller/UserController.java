@@ -77,13 +77,13 @@ public class UserController {
                             BindingResult result,
                             @RequestParam("profilePicture") MultipartFile profilePicture,
                             RedirectAttributes attr) {
-        if (result.hasErrors()) {
-            System.out.println("entrou no if 1");
-            model.addAttribute("photographer", photographer);
-            // FIX: Add content to the model directly
-            model.addAttribute(CONTENT_ARG, "registration :: content");
-            return LAYOUT_ARG;
-        }
+//        if (result.hasErrors()) {
+//            System.out.println("entrou no if 1");
+//            model.addAttribute("photographer", photographer);
+//            // FIX: Add content to the model directly
+//            model.addAttribute(CONTENT_ARG, "registration :: content");
+//            return LAYOUT_ARG;
+//        }
 
         try {
             if (!profilePicture.isEmpty()) {

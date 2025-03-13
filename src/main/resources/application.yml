@@ -6,9 +6,9 @@ spring:
       max-file-size: 15MB
       max-request-size: 15MB
   datasource:
-    url: jdbc:postgresql://pictale-db:5432/pictale
+    url: jdbc:postgresql://localhost:8432/pictale
     username: postgres
-    password: ${PG_PASS}
+    password: postgres
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -25,4 +25,4 @@ spring:
     resources:
       static-locations: classpath:/static/, classpath:/public/, classpath:/resources/, classpath:/META-INF/resources/, file:/home/peter-costa/workspace/personal/pictale/uploads/
 server:
-  port: 8080
+  port: 9080

@@ -165,6 +165,18 @@ public class PhotoService {
         commentRepository.deleteById(idComment);
     }
 
+    @Transactional
+    public void editComment(Integer commentId, String commentText, Photographer photographer) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new IllegalArgumentException("Comentário não encontrado"));
+
+        if (!comment.getPhotographer().equals(photographer)) {
+            throw new IllegalArgumentException("Você não tem permissão para editar este comentário");
+        }
+
+        comment.setCommentText(commentText);
+        commentRepository.save(comment);
+    }
     // @Transactional
     // public void editComment(Integer photoId, String commentText, Photographer photographer) {
     //     Photo photo = photoRepository.findById(photoId)
