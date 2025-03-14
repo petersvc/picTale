@@ -1,5 +1,8 @@
 package com.dvcode.pictale.controller;
 
+import com.dvcode.pictale.service.CommentService;
+import com.dvcode.pictale.service.PhotoService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +23,23 @@ import com.dvcode.pictale.model.Photographer;
 import com.dvcode.pictale.service.PhotographerService;
 import com.dvcode.pictale.util.Role;
 
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.Paragraph;
+
+import com.dvcode.pictale.model.Comment;
+import com.dvcode.pictale.model.Photo;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+
 @Controller
 @RequestMapping("/admin")
 @PreAuthorize("hasRole('ADMIN')")  // Adicione esta anotação para segurança extra
@@ -28,6 +48,12 @@ public class AdminController {
     private static final String LAYOUT_ARG = "layout";
     private static final String CONTENT_ARG = "content";
     private static final String MESSAGE_ARG = "message";
+
+    @Autowired
+    private PhotoService photoService;
+
+    @Autowired
+    private CommentService commentService;
 
     public AdminController(PhotographerService photographerService) {
         this.photographerService = photographerService;
@@ -131,4 +157,56 @@ public class AdminController {
         attr.addFlashAttribute(MESSAGE_ARG, "Comment ability restored successfully!");
         return "redirect:/admin/photographers";
     }
+
+    @GetMapping("/photo/{photoId}/comments/pdf")
+    public ResponseEntity<ByteArrayResource> generateCommentsPdfAndDownload(@PathVariable Integer photoId) throws IOException {
+        // Passo 1: Obter a foto e seus comentários
+        Photo photo = photoService.getPhotoById(Math.toIntExact(photoId));
+        List<Comment> comments = commentService.getCommentsByPhotoIdOrderedByDate(photoId);
+
+        // Passo 2: Gerar o PDF em memória
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        generatePdf(comments, byteArrayOutputStream);
+
+        // Passo 3: Criar o ByteArrayResource a partir do PDF gerado
+        ByteArrayResource resource = new ByteArrayResource(byteArrayOutputStream.toByteArray());
+
+        // Passo 4: Preparar a resposta para download do PDF
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_PDF)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=comments.pdf")
+                .body(resource);
+    }
+
+    private void generatePdf(List<Comment> comments, ByteArrayOutputStream byteArrayOutputStream) throws IOException {
+        // Inicializa o PdfWriter com um ByteArrayOutputStream
+        PdfWriter writer = new PdfWriter(byteArrayOutputStream);
+
+        // Inicializa o PdfDocument com o writer
+        PdfDocument pdfDocument = new PdfDocument(writer);
+
+        // Cria o Document para adicionar conteúdo ao PDF
+        Document document = new Document(pdfDocument);
+
+        // Adiciona o título
+        document.add(new Paragraph("Comentários da Foto"));
+        document.add(new Paragraph("--------------------------------------------------"));
+        document.add(new Paragraph());
+
+        // Adiciona os comentários ordenados por data
+        for (Comment comment : comments) {
+            String commentText = comment.getCommentText();
+            String commentDate = comment.getCreatedAt().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+            String photographerName = comment.getPhotographer().getName();
+
+            document.add(new Paragraph("Comentário de: " + photographerName));
+            document.add(new Paragraph("Data: " + commentDate));
+            document.add(new Paragraph("Comentário: " + commentText));
+            document.add(new Paragraph());
+        }
+
+        // Fecha o documento
+        document.close();
+    }
+
 }

@@ -41,6 +41,7 @@ public class PhotoController {
             return "redirect:/login";
         }
 
+        Photographer currentUser = photographerService.findByEmail(userDetails.getUsername());
         Photographer photographer = photographerService.findByEmail(userDetails.getUsername());
         Photo photo = photoService.getPhotoById(id);
 
@@ -50,6 +51,7 @@ public class PhotoController {
 
         boolean liked = likeService.isPhotoLikedByPhotographer(id, photographer.getId());
 
+        model.addAttribute("currentUser", currentUser);
         model.addAttribute("photo", photo);
         model.addAttribute("liked", liked);
         model.addAttribute("content", "photo-detail");
